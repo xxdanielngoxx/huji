@@ -1,0 +1,11 @@
+---
+spring:
+  application:
+    name: "api"
+
+# actuator endpoints configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
