@@ -2,6 +2,7 @@
 #
 # pre-commit hook
 
+# pre-commit api check
 function pre_commit_api_check() {
   api_spotless_check
 }
@@ -12,10 +13,40 @@ function api_spotless_check() {
   cd ..
 }
 
+# pre-commit web check
+function pre_commit_web_check() {
+  web_lint_check
+}
+
+function web_lint_check() {
+  cd web
+  ng lint --quiet --fix
+  npx prettier --write --ignore-unknown .
+  cd ..
+}
+
+is_api_changed=false;
+is_web_changed=false;
+
 for f in $(git diff --name-only HEAD)
 do
   if [[ $f =~ ^api\/* ]]
   then
-    pre_commit_api_check
+    is_api_changed=true;
+  fi
+  if [[ $f =~ ^web\/* ]]
+  then
+    is_web_changed=true;
   fi
 done
+
+
+if [ $is_api_changed = true ]
+then
+  pre_commit_api_check
+fi
+
+if [ $is_web_changed = true ]
+then
+  pre_commit_web_check
+fi
