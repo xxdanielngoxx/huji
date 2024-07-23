@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# pre-commit hook
+
+function pre_commit_api_check() {
+  api_spotless_check
+}
+
+function api_spotless_check() {
+  cd api
+  ./gradlew spotlessCheck 
+  cd ..
+}
+
+for f in $(git diff --name-only HEAD)
+do
+  if [[ $f =~ ^api\/* ]]
+  then
+    pre_commit_api_check
+  fi
+done
