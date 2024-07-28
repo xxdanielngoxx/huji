@@ -1,7 +1,10 @@
+@use 'sass:map';
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 // Plus imports for other components in your app.
+
+@use './scss/base/reset';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -14,7 +17,7 @@ $web-theme: mat.define-theme(
     color: (
       theme-type: light,
       primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
+      tertiary: mat.$orange-palette,
     ),
     density: (
       scale: 0,
@@ -27,6 +30,49 @@ $web-theme: mat.define-theme(
 // that you are using.
 :root {
   @include mat.all-component-themes($web-theme);
+
+  --app-primary-0: #{mat.get-theme-color($web-theme, primary, 0)};
+  --app-primary-10: #{mat.get-theme-color($web-theme, primary, 10)};
+  --app-primary-20: #{mat.get-theme-color($web-theme, primary, 20)};
+  --app-primary-25: #{mat.get-theme-color($web-theme, primary, 25)};
+  --app-primary-30: #{mat.get-theme-color($web-theme, primary, 30)};
+  --app-primary-35: #{mat.get-theme-color($web-theme, primary, 35)};
+  --app-primary-40: #{mat.get-theme-color($web-theme, primary, 40)};
+  --app-primary-50: #{mat.get-theme-color($web-theme, primary, 50)};
+  --app-primary-60: #{mat.get-theme-color($web-theme, primary, 60)};
+  --app-primary-70: #{mat.get-theme-color($web-theme, primary, 70)};
+  --app-primary-80: #{mat.get-theme-color($web-theme, primary, 80)};
+  --app-primary-90: #{mat.get-theme-color($web-theme, primary, 90)};
+  --app-primary-95: #{mat.get-theme-color($web-theme, primary, 95)};
+  --app-primary-98: #{mat.get-theme-color($web-theme, primary, 98)};
+  --app-primary-99: #{mat.get-theme-color($web-theme, primary, 99)};
+  --app-primary-100: #{mat.get-theme-color($web-theme, primary, 100)};
+
+  --app-tertiary-0: #{mat.get-theme-color($web-theme, tertiary, 0)};
+  --app-tertiary-10: #{mat.get-theme-color($web-theme, tertiary, 10)};
+  --app-tertiary-20: #{mat.get-theme-color($web-theme, tertiary, 20)};
+  --app-tertiary-25: #{mat.get-theme-color($web-theme, tertiary, 25)};
+  --app-tertiary-30: #{mat.get-theme-color($web-theme, tertiary, 30)};
+  --app-tertiary-35: #{mat.get-theme-color($web-theme, tertiary, 35)};
+  --app-tertiary-40: #{mat.get-theme-color($web-theme, tertiary, 40)};
+  --app-tertiary-50: #{mat.get-theme-color($web-theme, tertiary, 50)};
+  --app-tertiary-60: #{mat.get-theme-color($web-theme, tertiary, 60)};
+  --app-tertiary-70: #{mat.get-theme-color($web-theme, tertiary, 70)};
+  --app-tertiary-80: #{mat.get-theme-color($web-theme, tertiary, 80)};
+  --app-tertiary-90: #{mat.get-theme-color($web-theme, tertiary, 90)};
+  --app-tertiary-95: #{mat.get-theme-color($web-theme, tertiary, 95)};
+  --app-tertiary-98: #{mat.get-theme-color($web-theme, tertiary, 98)};
+  --app-tertiary-99: #{mat.get-theme-color($web-theme, tertiary, 99)};
+  --app-tertiary-100: #{mat.get-theme-color($web-theme, tertiary, 100)};
+
+  --app-border: #cdcdcd;
+
+  --app-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  --app-rounded: 6px;
+
+  --app-max-width: 1280px;
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
