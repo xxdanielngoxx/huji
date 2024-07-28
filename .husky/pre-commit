@@ -2,6 +2,8 @@
 #
 # pre-commit hook
 
+set -e
+
 # pre-commit api check
 function pre_commit_api_check() {
   api_spotless_check

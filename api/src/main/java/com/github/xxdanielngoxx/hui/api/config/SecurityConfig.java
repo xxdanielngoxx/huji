@@ -15,8 +15,8 @@ public class SecurityConfig {
     return http.authorizeHttpRequests(
             authorizeHttpRequestsCustomizer ->
                 authorizeHttpRequestsCustomizer
-                    .requestMatchers("/actuator/info").permitAll()
-                    .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/", "/webapp/**").permitAll()
+                    .requestMatchers("/actuator/info", "/actuator/health").permitAll()
                     .requestMatchers("/error").permitAll()
                     .anyRequest().authenticated()
         )
