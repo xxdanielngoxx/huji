@@ -22,8 +22,8 @@ function pre_commit_web_check() {
 
 function web_lint_check() {
   cd web
-  ng lint --quiet --fix
-  npx prettier --write --ignore-unknown .
+  ng lint
+  npx prettier . --check
   cd ..
 }
 

@@ -66,6 +66,7 @@ $web-theme: mat.define-theme(
   --app-tertiary-100: #{mat.get-theme-color($web-theme, tertiary, 100)};
 
   --app-border: #cdcdcd;
+  --app-rounded-full: 9999px;
 
   --app-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);

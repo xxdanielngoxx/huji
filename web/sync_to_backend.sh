@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Prevent Git Bash convert path
+export MSYS_NO_PATHCONV=1
+
 function build() {
   npm run build -- --base-href '/webapp/'
 }
