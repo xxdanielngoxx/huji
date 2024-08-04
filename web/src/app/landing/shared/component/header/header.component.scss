@@ -1,0 +1,82 @@
+.navigation {
+  position: sticky;
+  top: 0;
+
+  min-height: 80px;
+  padding: 0 3%;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+
+  background-color: var(--app-primary-90);
+
+  border-bottom: 1px rgb(0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px;
+
+  @media screen and (max-width: 680px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    justify-self: start;
+
+    h1 {
+      margin: 0;
+      letter-spacing: 0.1rem;
+    }
+
+    a {
+      text-decoration: none;
+
+      width: 100%;
+    }
+
+    @media screen and (max-width: 680px) {
+      justify-self: stretch;
+
+      padding: 16px;
+    }
+  }
+
+  &__links {
+    grid-column: span 2;
+    justify-self: end;
+
+    @media screen and (max-width: 680px) {
+      grid-column: span 1;
+      justify-self: stretch;
+
+      flex-direction: column;
+
+      padding: 16px;
+
+      border-top: 1px solid var(--app-border);
+    }
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    gap: 8px;
+
+    &__item {
+      text-align: center;
+
+      .active {
+        background-color: var(--app-primary-80);
+      }
+
+      a {
+        @media screen and (max-width: 680px) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

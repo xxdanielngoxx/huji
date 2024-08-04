@@ -1,0 +1,23 @@
+.item {
+  display: flex;
+  gap: 16px;
+
+  padding: 16px 24px;
+
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-rounded);
+  box-shadow: var(--app-shadow);
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 96px;
+    height: 96px;
+
+    border-radius: var(--app-rounded-full);
+    background-color: var(--app-primary-95);
+    border: 1px solid var(--app-border);
+  }
+}

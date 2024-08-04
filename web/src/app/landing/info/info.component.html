@@ -1,0 +1,21 @@
+<section>
+  <h2>Thông tin ứng dụng</h2>
+  <div class="info-container">
+    <app-info-item
+      [propertyName]="info()?.build?.version?.propertyName"
+      [value]="info()?.build?.version?.value"
+      [icon]="info()?.build?.version?.icon"></app-info-item>
+    <app-info-item
+      [propertyName]="info()?.build?.buildAt?.propertyName"
+      [value]="info()?.build?.buildAt?.value"
+      [icon]="info()?.build?.buildAt?.icon"></app-info-item>
+    <app-info-item
+      [propertyName]="info()?.commit?.commitId?.propertyName"
+      [value]="info()?.commit?.commitId?.value"
+      [icon]="info()?.commit?.commitId?.icon"></app-info-item>
+    <app-info-item
+      [propertyName]="info()?.commit?.commitAt?.propertyName"
+      [value]="info()?.commit?.commitAt?.value"
+      [icon]="info()?.commit?.commitAt?.icon"></app-info-item>
+  </div>
+</section>

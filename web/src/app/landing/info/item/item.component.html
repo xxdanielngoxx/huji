@@ -1,0 +1,22 @@
+<div class="item">
+  @if (icon) {
+    <div class="item__icon">
+      <fa-icon [icon]="icon" size="3x"></fa-icon>
+    </div>
+  } @else {
+    <div class="item__icon">
+      <fa-icon [icon]="defaultIcon" size="3x"></fa-icon>
+    </div>
+  }
+
+  <div class="item__content">
+    <p>
+      <span class="item__property-name">
+        <strong>{{ propertyName }}</strong>
+      </span>
+    </p>
+    <p class="item__value">
+      {{ value }}
+    </p>
+  </div>
+</div>

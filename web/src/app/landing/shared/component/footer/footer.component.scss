@@ -1,0 +1,10 @@
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 80px;
+
+  color: var(--app-primary-30);
+  background-color: var(--app-primary-90);
+}
