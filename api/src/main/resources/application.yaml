@@ -3,6 +3,13 @@ spring:
   application:
     name: "api"
 
+# springdoc configuration
+springdoc:
+  swagger-ui:
+    path: /docs/swagger-ui.html
+  api-docs:
+    path: /docs/api-docs
+
 # actuator endpoints configuration
 management:
   endpoints:

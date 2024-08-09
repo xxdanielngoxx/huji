@@ -1,4 +1,4 @@
-package com.github.xxdanielngoxx.hui.api.config;
+package com.github.xxdanielngoxx.hui.api.shared.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;

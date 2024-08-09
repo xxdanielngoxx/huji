@@ -1,4 +1,4 @@
-package com.github.xxdanielngoxx.hui.api.webapp.controller;
+package com.github.xxdanielngoxx.hui.api.shared.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
