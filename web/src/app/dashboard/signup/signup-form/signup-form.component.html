@@ -1,0 +1,83 @@
+<div class="signup-form-container">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <div class="signup-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Tên</mat-label>
+        <input matInput [formControl]="fullName" required />
+        @if (fullName.hasError('required')) {
+          <mat-error>Tên không được để trống</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Số điện thoại</mat-label>
+        <input matInput [formControl]="phoneNumber" required />
+        @if (phoneNumber.hasError('required')) {
+          <mat-error>Số điện thoại không được để trống</mat-error>
+        }
+        @if (phoneNumber.hasError('pattern')) {
+          <mat-error>Số điện thoại không hợp lệ</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Mật khẩu</mat-label>
+        <input
+          matInput
+          [formControl]="password"
+          [type]="showPassword() ? 'text' : 'password'"
+          required />
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="onShowPasswordClick($event)"
+          [attr.aria-label]="'Show password'"
+          [attr.aria-pressed]="showPassword()">
+          <mat-icon>{{
+            showPassword() ? 'visibility' : 'visibility_off'
+          }}</mat-icon>
+        </button>
+        @if (password.hasError('required')) {
+          <mat-error>Mật khẩu không được để trống</mat-error>
+        }
+        @if (password.hasError('minlength') || password.hasError('maxlength')) {
+          <mat-error>Mật khẩu phải từ 8 đến 64 ký tự</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Mật khẩu xác nhận</mat-label>
+        <input
+          matInput
+          [formControl]="confirmPassword"
+          [type]="showConfirmPassword() ? 'text' : 'password'"
+          required
+          (paste)="(false)" />
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="onShownConfirmPasswordClick($event)"
+          [attr.aria-label]="'Show confirm password'"
+          [attr.aria-pressed]="showConfirmPassword()">
+          <mat-icon>{{
+            showConfirmPassword() ? 'visibility' : 'visibility_off'
+          }}</mat-icon>
+        </button>
+        @if (confirmPassword.hasError('confirmPasswordMismatch')) {
+          <mat-error>Mật khẩu xác nhận phải trùng với mật khẩu</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput [formControl]="email" placeholder="Email" email />
+        @if (email.hasError('email')) {
+          <mat-error>Email không hợp lệ</mat-error>
+        }
+      </mat-form-field>
+      <div class="signup-form__action">
+        <button type="submit" mat-flat-button [disabled]="!signupForm.valid">
+          Tiếp theo
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
