@@ -1,0 +1,15 @@
+<div class="dialog">
+  <h2 mat-dialog-title class="dialog__title">
+    {{ data.title }}
+  </h2>
+  <mat-divider></mat-divider>
+  <mat-dialog-content class="dialog__content">
+    <fa-icon [icon]="icon" [className]="data.type" size="3x"> </fa-icon>
+    <p>
+      {{ data.content }}
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Đóng</button>
+  </mat-dialog-actions>
+</div>
