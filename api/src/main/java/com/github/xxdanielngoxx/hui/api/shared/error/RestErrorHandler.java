@@ -1,6 +1,7 @@
 package com.github.xxdanielngoxx.hui.api.shared.error;
 
 import jakarta.annotation.Nonnull;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,20 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
   private String extractRequestURI(@Nonnull final WebRequest request) {
     final ServletWebRequest servletWebRequest = (ServletWebRequest) request;
     return servletWebRequest.getRequest().getRequestURI();
+  }
+
+  @ExceptionHandler(value = {IllegalArgumentException.class})
+  public ResponseEntity<ApiError> handleIllegalArgumentException(
+      @Nonnull IllegalArgumentException ex, @Nonnull HttpServletRequest request) {
+
+    final ApiError apiError =
+        ApiError.builder()
+            .status(HttpStatus.BAD_REQUEST)
+            .errors(List.of(ex.getMessage()))
+            .path(request.getRequestURI())
+            .build();
+
+    return new ResponseEntity<>(apiError, apiError.getStatus());
   }
 
   @ExceptionHandler(value = {Exception.class})

@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Documented
 @Constraint(validatedBy = VnPhoneNumberValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value = ElementType.FIELD)
+@Target(value = {ElementType.FIELD, ElementType.PARAMETER})
 public @interface VnPhoneNumber {
   String message() default
       "{com.github.xxdanielngoxx.hui.api.shared.validation.phonenumber.VnPhoneNumber}";

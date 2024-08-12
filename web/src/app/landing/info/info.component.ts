@@ -72,7 +72,7 @@ export class InfoComponent {
 
     const buildAtInfo: ComponentInfoItemModel = {
       propertyName: 'Thời điểm phát hành',
-      value: new Date(fetchedBuildInfo.time).toISOString(),
+      value: new Date(fetchedBuildInfo.time * 1000).toISOString(),
       icon: faClock,
     };
 
@@ -93,7 +93,7 @@ export class InfoComponent {
 
     const commitAtInfo: ComponentInfoItemModel = {
       propertyName: 'Thời điểm commit',
-      value: new Date(fetchedCommitInfo.time).toISOString(),
+      value: new Date(fetchedCommitInfo.time * 1000).toISOString(),
       icon: faClock,
     };
 

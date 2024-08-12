@@ -17,6 +17,9 @@
         @if (phoneNumber.hasError('pattern')) {
           <mat-error>Số điện thoại không hợp lệ</mat-error>
         }
+        @if (phoneNumber.hasError('uniquePhoneNumber')) {
+          <mat-error>Số điện thoại đã được đăng ký bởi chủ hụi khác</mat-error>
+        }
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Mật khẩu</mat-label>

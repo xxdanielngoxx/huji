@@ -21,6 +21,7 @@ import {
   DefaultDialogComponent,
   DefaultDialogData,
 } from '../../../core/notification/default-dialog/default-dialog.component';
+import { UniquePhoneNumberValidator } from '../shared/validator/unique-phone-number-validator.directive';
 
 @Component({
   selector: 'app-signup-form',
@@ -37,6 +38,7 @@ import {
 })
 export class SignupFormComponent {
   private registerOwnerService = inject(RegisterOwnerService);
+  private uniquePhoneNumberValidator = inject(UniquePhoneNumberValidator);
   private router = inject(Router);
   private matDialog = inject(MatDialog);
 
@@ -44,10 +46,18 @@ export class SignupFormComponent {
 
   fullName = new FormControl('', Validators.required);
 
-  phoneNumber = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^(?:\\+84|0084|0)[235789][0-9]{8}$'),
-  ]);
+  phoneNumber = new FormControl('', {
+    validators: [
+      Validators.required,
+      Validators.pattern('^(?:\\+84|0084|0)[235789][0-9]{8}$'),
+    ],
+    asyncValidators: [
+      this.uniquePhoneNumberValidator.validate.bind(
+        this.uniquePhoneNumberValidator
+      ),
+    ],
+    updateOn: 'blur',
+  });
 
   password = new FormControl('', [
     Validators.required,
