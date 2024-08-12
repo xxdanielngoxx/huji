@@ -139,4 +139,35 @@ class OwnerRepositoryTest {
       assertThat(exception.getMessage()).contains(expectedErrorMessage);
     }
   }
+
+  @Nested
+  class ExistsByPhoneNumberTest {
+
+    @Test
+    void should_return_true_when_phone_number_is_used_by_an_owner() {
+      final String phoneNumber = "0393238017";
+
+      final OwnerEntity owner =
+          OwnerEntity.builder()
+              .fullName("Ngô Đình Lộc")
+              .phoneNumber("0393238017")
+              .password("super_secret?#")
+              .email("danielngo1998@gmail.com")
+              .build();
+
+      ownerRepository.save(owner);
+
+      final boolean result = ownerRepository.existsByPhoneNumber(phoneNumber);
+      assertThat(result).isTrue();
+    }
+
+    @Test
+    void should_return_false_when_phone_number_is_not_used_by_any_owner() {
+      final String phoneNumber = "0393238017";
+
+      final boolean result = ownerRepository.existsByPhoneNumber(phoneNumber);
+
+      assertThat(result).isFalse();
+    }
+  }
 }

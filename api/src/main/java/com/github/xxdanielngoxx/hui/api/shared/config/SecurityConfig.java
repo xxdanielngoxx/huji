@@ -19,13 +19,14 @@ public class SecurityConfig {
             .authorizeHttpRequests(
                 authorizeHttpRequestsCustomizer ->
                     authorizeHttpRequestsCustomizer
-                        .requestMatchers("/", "/webapp/**").permitAll()
-                        .requestMatchers("/actuator/info", "/actuator/health").permitAll()
-                        .requestMatchers("/docs/**").permitAll()
-                        .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/login")).permitAll()
-                        .requestMatchers(antMatcher(HttpMethod.POST, "/api/owners")).permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .anyRequest().authenticated()
+                            .requestMatchers("/", "/webapp/**").permitAll()
+                            .requestMatchers("/actuator/info", "/actuator/health").permitAll()
+                            .requestMatchers("/docs/**").permitAll()
+                            .requestMatchers(antMatcher(HttpMethod.POST, "/api/auth/login")).permitAll()
+                            .requestMatchers(antMatcher(HttpMethod.POST, "/api/owners")).permitAll()
+                            .requestMatchers(antMatcher(HttpMethod.GET, "/api/owners/checkPhoneNumberNotYetUsed")).permitAll()
+                            .requestMatchers("/error").permitAll()
+                            .anyRequest().authenticated()
             )
             .csrf(csrfCustomizer -> csrfCustomizer.ignoringRequestMatchers("/api/**"));
       // spotless:on

@@ -4,12 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.xxdanielngoxx.hui.api.shared.config.SecurityConfig;
+import com.github.xxdanielngoxx.hui.api.shared.error.RestErrorHandler;
 import com.github.xxdanielngoxx.hui.api.user.controller.request.RegisterOwnerRequest;
+import com.github.xxdanielngoxx.hui.api.user.service.CheckingOwnerPhoneNumberNotYetUsedService;
 import com.github.xxdanielngoxx.hui.api.user.service.RegisteringOwnerService;
 import com.github.xxdanielngoxx.hui.api.user.service.command.RegisterOwnerCommand;
 import java.util.UUID;
@@ -27,10 +31,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 @Import(SecurityConfig.class)
-@WebMvcTest(controllers = {OwnerController.class})
+@WebMvcTest(controllers = {OwnerController.class, RestErrorHandler.class})
 class OwnerControllerTest {
 
   @MockBean private RegisteringOwnerService registeringOwnerService;
+
+  @MockBean
+  private CheckingOwnerPhoneNumberNotYetUsedService checkingOwnerPhoneNumberNotYetUsedService;
 
   @Autowired private MockMvc mockMvc;
 
@@ -114,6 +121,52 @@ class OwnerControllerTest {
       assertThat(registerOwnerCommandCaptor.getValue().getPassword())
           .isEqualTo(request.getPassword());
       assertThat(registerOwnerCommandCaptor.getValue().getEmail()).isNull();
+    }
+  }
+
+  @Nested
+  class CheckPhoneNumberAlreadyUsedTest {
+
+    @Test
+    void should_return_status_200_when_owner_phone_number_is_not_used_by_any_owner()
+        throws Exception {
+      final String phoneNumber = "0393238017";
+
+      doNothing()
+          .when(checkingOwnerPhoneNumberNotYetUsedService)
+          .checkPhoneNumberNotYetUsed(phoneNumber);
+
+      mockMvc
+          .perform(
+              get("/api/owners/checkPhoneNumberNotYetUsed").queryParam("phone_number", phoneNumber))
+          .andExpect(status().isOk());
+
+      verify(checkingOwnerPhoneNumberNotYetUsedService, times(1))
+          .checkPhoneNumberNotYetUsed(phoneNumber);
+    }
+
+    @Test
+    void should_return_status_400_when_owner_phone_number_already_used_by_another_owner()
+        throws Exception {
+      final String phoneNumber = "0393238017";
+
+      final IllegalArgumentException exception =
+          new IllegalArgumentException(
+              String.format("phone number %s is already used by another owner", phoneNumber));
+      doThrow(exception)
+          .when(checkingOwnerPhoneNumberNotYetUsedService)
+          .checkPhoneNumberNotYetUsed(phoneNumber);
+
+      mockMvc
+          .perform(
+              get("/api/owners/checkPhoneNumberNotYetUsed").queryParam("phone_number", phoneNumber))
+          .andExpect(status().isBadRequest())
+          .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+          .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.name()))
+          .andReturn();
+
+      verify(checkingOwnerPhoneNumberNotYetUsedService, times(1))
+          .checkPhoneNumberNotYetUsed(phoneNumber);
     }
   }
 }

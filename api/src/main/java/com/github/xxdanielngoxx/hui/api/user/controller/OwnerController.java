@@ -3,6 +3,7 @@ package com.github.xxdanielngoxx.hui.api.user.controller;
 import com.github.xxdanielngoxx.hui.api.shared.error.ApiError;
 import com.github.xxdanielngoxx.hui.api.user.controller.mapper.RegisterOwnerMapper;
 import com.github.xxdanielngoxx.hui.api.user.controller.request.RegisterOwnerRequest;
+import com.github.xxdanielngoxx.hui.api.user.service.CheckingOwnerPhoneNumberNotYetUsedService;
 import com.github.xxdanielngoxx.hui.api.user.service.RegisteringOwnerService;
 import com.github.xxdanielngoxx.hui.api.user.service.command.RegisterOwnerCommand;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +27,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OwnerController {
 
   private final RegisteringOwnerService registeringOwnerService;
+
+  private final CheckingOwnerPhoneNumberNotYetUsedService checkingOwnerPhoneNumberNotYetUsedService;
 
   @PostMapping
   @Operation(
@@ -56,5 +59,22 @@ public class OwnerController {
         UriComponentsBuilder.fromPath("/api/owners/{id}").buildAndExpand(createdOwnerId).toUri();
 
     return ResponseEntity.created(createdOwnerLocation).build();
+  }
+
+  @GetMapping("/checkPhoneNumberNotYetUsed")
+  @Operation(
+      summary = "Check whether any other owner does not use the phone number",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "The phone number is not used by any owner"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "The phone number is already used by another owner")
+      })
+  public ResponseEntity<Void> checkPhoneNumberNotYetUsed(
+      @Valid @RequestParam(name = "phone_number") String phoneNumber) {
+    checkingOwnerPhoneNumberNotYetUsedService.checkPhoneNumberNotYetUsed(phoneNumber);
+    return ResponseEntity.ok().build();
   }
 }
