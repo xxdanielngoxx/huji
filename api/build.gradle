@@ -4,6 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.6'
 	id 'com.diffplug.spotless' version '6.25.0'
 	id "com.gorylenko.gradle-git-properties" version "2.4.1"
+	id 'jacoco'
 }
 
 group = 'com.github.xxdanielngoxx.hui'
@@ -107,4 +108,12 @@ tasks.named('test') {
 
 		showStandardStreams = false
 	}
+}
+
+test {
+	finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
 }
