@@ -4,7 +4,7 @@ import {
   AsyncValidator,
   ValidationErrors,
 } from '@angular/forms';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap, timer } from 'rxjs';
 import { CheckOwnerEmailDuplicatedService } from '../service/check-owner-email-duplicated.service';
 
 @Injectable({
@@ -18,16 +18,20 @@ export class DuplicatedEmailValidator implements AsyncValidator {
   validate(
     control: AbstractControl
   ): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    return this.checkOwnerEmailDuplicatedService
-      .checkEmailDuplicated(control.value)
-      .pipe(
-        map(duplidated => {
-          if (duplidated) {
-            return { duplicatedEmail: true };
-          }
+    return timer(300).pipe(
+      switchMap(() =>
+        this.checkOwnerEmailDuplicatedService
+          .checkEmailDuplicated(control.value)
+          .pipe(
+            map(duplidated => {
+              if (duplidated) {
+                return { duplicatedEmail: true };
+              }
 
-          return null;
-        })
-      );
+              return null;
+            })
+          )
+      )
+    );
   }
 }
