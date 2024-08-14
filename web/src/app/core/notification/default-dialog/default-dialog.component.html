@@ -9,7 +9,10 @@
       {{ data.content }}
     </p>
   </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Đóng</button>
-  </mat-dialog-actions>
+
+  @if (data.isDisplayCloseButton) {
+    <mat-dialog-actions>
+      <button mat-button mat-dialog-close>Đóng</button>
+    </mat-dialog-actions>
+  }
 </div>

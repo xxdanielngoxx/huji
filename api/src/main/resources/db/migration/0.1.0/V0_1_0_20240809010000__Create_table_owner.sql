@@ -5,7 +5,7 @@ CREATE
             full_name VARCHAR(255) NOT NULL,
             phone_number VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
-            email VARCHAR(255),
+            email VARCHAR(255) NOT NULL,
             CONSTRAINT pk_owner PRIMARY KEY(id)
         );
 

@@ -1,4 +1,10 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  OnDestroy,
+  signal,
+} from '@angular/core';
 import {
   ReactiveFormsModule,
   Validators,
@@ -37,7 +43,7 @@ import { DuplicatedEmailValidator } from '../shared/validator/duplicated-email-v
   templateUrl: './signup-form.component.html',
   styleUrl: './signup-form.component.scss',
 })
-export class SignupFormComponent {
+export class SignupFormComponent implements OnDestroy {
   private registerOwnerService = inject(RegisterOwnerService);
   private duplicatedPhoneNumberValidator = inject(
     DuplicatedPhoneNumberValidator
@@ -45,6 +51,8 @@ export class SignupFormComponent {
   private duplicatedEmailValidator = inject(DuplicatedEmailValidator);
   private router = inject(Router);
   private matDialog = inject(MatDialog);
+
+  private timeoutRefs: ReturnType<typeof setTimeout>[] = [];
 
   private destroyRef = inject(DestroyRef);
 
@@ -60,7 +68,6 @@ export class SignupFormComponent {
         this.duplicatedPhoneNumberValidator
       ),
     ],
-    updateOn: 'blur',
   });
 
   password = new FormControl('', [
@@ -89,13 +96,12 @@ export class SignupFormComponent {
   }
 
   email = new FormControl('', {
-    validators: [Validators.email],
+    validators: [Validators.required, Validators.email],
     asyncValidators: [
       this.duplicatedEmailValidator.validate.bind(
         this.duplicatedEmailValidator
       ),
     ],
-    updateOn: 'blur',
   });
 
   signupForm = new FormGroup({
@@ -126,18 +132,18 @@ export class SignupFormComponent {
       type: 'success',
       title: 'Đăng ký thành công',
       content: 'Chuyển sang trang đăng nhập',
+      isDisplayCloseButton: false,
     };
 
     const dialogRef = this.matDialog.open(DefaultDialogComponent, {
       data: dialogData,
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.router.navigate(['/dashboard/login']);
-      });
+    const timeoutRef: ReturnType<typeof setTimeout> = setTimeout(() => {
+      dialogRef.close();
+      this.router.navigate(['/dashboard/login']);
+    }, 3000);
+    this.timeoutRefs.push(timeoutRef);
   }
 
   private onRegisterFailed(): void {
@@ -146,10 +152,15 @@ export class SignupFormComponent {
       title: 'Đăng ký thất bại',
       content:
         'Vui lòng liên lạc đến bộ phận chăm sóc khách hàng để được hỗ trợ',
+      isDisplayCloseButton: true,
     };
 
     this.matDialog.open(DefaultDialogComponent, {
       data: dialogData,
     });
+  }
+
+  ngOnDestroy(): void {
+    this.timeoutRefs.forEach(clearTimeout);
   }
 }

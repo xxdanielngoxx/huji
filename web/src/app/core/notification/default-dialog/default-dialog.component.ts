@@ -24,6 +24,7 @@ export interface DefaultDialogData {
   type: DialogType;
   title: string;
   content: string;
+  isDisplayCloseButton: boolean;
 }
 
 export type DialogType = 'success' | 'info' | 'warn' | 'error';

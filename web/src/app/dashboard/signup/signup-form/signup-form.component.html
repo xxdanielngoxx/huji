@@ -3,14 +3,14 @@
     <div class="signup-form">
       <mat-form-field appearance="outline">
         <mat-label>Tên</mat-label>
-        <input matInput [formControl]="fullName" required />
+        <input matInput [formControl]="fullName" />
         @if (fullName.hasError('required')) {
           <mat-error>Tên không được để trống</mat-error>
         }
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Số điện thoại</mat-label>
-        <input matInput [formControl]="phoneNumber" required />
+        <input matInput [formControl]="phoneNumber" />
         @if (phoneNumber.hasError('required')) {
           <mat-error>Số điện thoại không được để trống</mat-error>
         }
@@ -18,7 +18,7 @@
           <mat-error>Số điện thoại không hợp lệ</mat-error>
         }
         @if (phoneNumber.hasError('duplicatedPhoneNumber')) {
-          <mat-error>Số điện thoại đã được đăng ký bởi chủ hụi khác</mat-error>
+          <mat-error>Số điện thoại đã được đăng ký</mat-error>
         }
       </mat-form-field>
       <mat-form-field appearance="outline">
@@ -26,8 +26,7 @@
         <input
           matInput
           [formControl]="password"
-          [type]="showPassword() ? 'text' : 'password'"
-          required />
+          [type]="showPassword() ? 'text' : 'password'" />
         <button
           type="button"
           mat-icon-button
@@ -52,7 +51,6 @@
           matInput
           [formControl]="confirmPassword"
           [type]="showConfirmPassword() ? 'text' : 'password'"
-          required
           (paste)="(false)" />
         <button
           type="button"
@@ -75,17 +73,18 @@
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput [formControl]="email" placeholder="Email" email />
+        @if (email.hasError('required')) {
+          <mat-error>Email không được để trống</mat-error>
+        }
         @if (email.hasError('email')) {
           <mat-error>Email không hợp lệ</mat-error>
         }
         @if (email.hasError('duplicatedEmail')) {
-          <mat-error>Email đã được đăng ký bởi chủ hụi khác</mat-error>
+          <mat-error>Email đã được đăng ký</mat-error>
         }
       </mat-form-field>
       <div class="signup-form__action">
-        <button type="submit" mat-flat-button [disabled]="!signupForm.valid">
-          Tiếp theo
-        </button>
+        <button type="submit" mat-flat-button>Tiếp theo</button>
       </div>
     </div>
   </form>

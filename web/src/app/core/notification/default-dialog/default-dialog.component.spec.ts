@@ -14,6 +14,7 @@ describe('DefaultDialogComponent', () => {
     type: 'info',
     title: 'example title',
     content: 'example content',
+    isDisplayCloseButton: false,
   };
 
   beforeEach(async () => {
