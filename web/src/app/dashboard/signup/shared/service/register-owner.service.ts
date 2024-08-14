@@ -11,7 +11,7 @@ export class RegisterOwnerService {
 
   registerOwner(request: RegisterOwnerRequest): Observable<string> {
     return this.httpClient
-      .post('/api/owners', request, { observe: 'response' })
+      .post('/api/v1/owners', request, { observe: 'response' })
       .pipe(
         map(response => {
           const location = response.headers.get('Location');

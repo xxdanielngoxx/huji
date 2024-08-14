@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OwnerRepository extends JpaRepository<OwnerEntity, UUID> {
   boolean existsByPhoneNumber(@Nonnull final String phoneNumber);
+
+  boolean existsByEmail(@Nonnull final String email);
 }

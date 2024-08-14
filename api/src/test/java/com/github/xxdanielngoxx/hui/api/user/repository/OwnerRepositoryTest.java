@@ -144,7 +144,7 @@ class OwnerRepositoryTest {
   class ExistsByPhoneNumberTest {
 
     @Test
-    void should_return_true_when_phone_number_is_used_by_an_owner() {
+    void should_return_true_when_phone_number_was_used_by_an_owner() {
       final String phoneNumber = "0393238017";
 
       final OwnerEntity owner =
@@ -166,6 +166,37 @@ class OwnerRepositoryTest {
       final String phoneNumber = "0393238017";
 
       final boolean result = ownerRepository.existsByPhoneNumber(phoneNumber);
+
+      assertThat(result).isFalse();
+    }
+  }
+
+  @Nested
+  class ExistsByEmailTest {
+
+    @Test
+    void should_return_true_when_email_was_already_used_by_an_owner() {
+      final String email = "danielngo1998@gmail.com";
+
+      final OwnerEntity owner =
+          OwnerEntity.builder()
+              .fullName("Ngô Đình Lộc")
+              .phoneNumber("0393238017")
+              .password("super_secret?#")
+              .email(email)
+              .build();
+
+      ownerRepository.save(owner);
+
+      final boolean result = ownerRepository.existsByEmail(email);
+      assertThat(result).isTrue();
+    }
+
+    @Test
+    void should_return_false_when_email_is_not_used_by_any_owner() {
+      final String email = "danielngo1998@gmail.com";
+
+      final boolean result = ownerRepository.existsByEmail(email);
 
       assertThat(result).isFalse();
     }
