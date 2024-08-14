@@ -5,12 +5,12 @@ import com.github.xxdanielngoxx.hui.api.shared.validation.phonenumber.VnPhoneNum
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 
+@Data
 @Builder
-@Getter
-@Setter
+@Jacksonized
 public class RegisterOwnerRequest {
 
   @NotNull private String fullName;

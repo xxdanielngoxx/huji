@@ -21,7 +21,8 @@ import {
   DefaultDialogComponent,
   DefaultDialogData,
 } from '../../../core/notification/default-dialog/default-dialog.component';
-import { UniquePhoneNumberValidator } from '../shared/validator/unique-phone-number-validator.directive';
+import { DuplicatedPhoneNumberValidator } from '../shared/validator/duplicated-phone-number-validator.directive';
+import { DuplicatedEmailValidator } from '../shared/validator/duplicated-email-validator.directive';
 
 @Component({
   selector: 'app-signup-form',
@@ -38,7 +39,10 @@ import { UniquePhoneNumberValidator } from '../shared/validator/unique-phone-num
 })
 export class SignupFormComponent {
   private registerOwnerService = inject(RegisterOwnerService);
-  private uniquePhoneNumberValidator = inject(UniquePhoneNumberValidator);
+  private duplicatedPhoneNumberValidator = inject(
+    DuplicatedPhoneNumberValidator
+  );
+  private duplicatedEmailValidator = inject(DuplicatedEmailValidator);
   private router = inject(Router);
   private matDialog = inject(MatDialog);
 
@@ -52,8 +56,8 @@ export class SignupFormComponent {
       Validators.pattern('^(?:\\+84|0084|0)[235789][0-9]{8}$'),
     ],
     asyncValidators: [
-      this.uniquePhoneNumberValidator.validate.bind(
-        this.uniquePhoneNumberValidator
+      this.duplicatedPhoneNumberValidator.validate.bind(
+        this.duplicatedPhoneNumberValidator
       ),
     ],
     updateOn: 'blur',
@@ -84,7 +88,15 @@ export class SignupFormComponent {
     event.stopPropagation();
   }
 
-  email = new FormControl('', [Validators.email]);
+  email = new FormControl('', {
+    validators: [Validators.email],
+    asyncValidators: [
+      this.duplicatedEmailValidator.validate.bind(
+        this.duplicatedEmailValidator
+      ),
+    ],
+    updateOn: 'blur',
+  });
 
   signupForm = new FormGroup({
     fullName: this.fullName,

@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "ng lint",
     "lint:fix": "ng lint --quiet --fix",
     "prettier:fix": "npx prettier --write --ignore-unknown ."

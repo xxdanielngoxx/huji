@@ -2,8 +2,13 @@ package com.github.xxdanielngoxx.hui.api.user.controller;
 
 import com.github.xxdanielngoxx.hui.api.shared.error.ApiError;
 import com.github.xxdanielngoxx.hui.api.user.controller.mapper.RegisterOwnerMapper;
+import com.github.xxdanielngoxx.hui.api.user.controller.request.CheckOwnerEmailDuplicatedRequest;
+import com.github.xxdanielngoxx.hui.api.user.controller.request.CheckOwnerPhoneNumberDuplicatedRequest;
 import com.github.xxdanielngoxx.hui.api.user.controller.request.RegisterOwnerRequest;
-import com.github.xxdanielngoxx.hui.api.user.service.CheckingOwnerPhoneNumberNotYetUsedService;
+import com.github.xxdanielngoxx.hui.api.user.controller.response.CheckOwnerEmailDuplicatedResponse;
+import com.github.xxdanielngoxx.hui.api.user.controller.response.CheckOwnerPhoneNumberDuplicatedResponse;
+import com.github.xxdanielngoxx.hui.api.user.service.CheckOwnerEmailDuplicatedService;
+import com.github.xxdanielngoxx.hui.api.user.service.CheckOwnerPhoneNumberDuplicatedService;
 import com.github.xxdanielngoxx.hui.api.user.service.RegisteringOwnerService;
 import com.github.xxdanielngoxx.hui.api.user.service.command.RegisterOwnerCommand;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,21 +21,26 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping(path = "/api/owners")
+@RequestMapping(path = "/api/v1/owners")
 @Tag(name = "owners")
 @RequiredArgsConstructor
 public class OwnerController {
 
   private final RegisteringOwnerService registeringOwnerService;
 
-  private final CheckingOwnerPhoneNumberNotYetUsedService checkingOwnerPhoneNumberNotYetUsedService;
+  private final CheckOwnerPhoneNumberDuplicatedService checkOwnerPhoneNumberDuplicatedService;
 
-  @PostMapping
+  private final CheckOwnerEmailDuplicatedService checkingOwnerEmailNotYetUsed;
+
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
       summary = "Register an owner",
       responses = {
@@ -56,25 +66,59 @@ public class OwnerController {
     final UUID createdOwnerId = registeringOwnerService.register(command);
 
     final URI createdOwnerLocation =
-        UriComponentsBuilder.fromPath("/api/owners/{id}").buildAndExpand(createdOwnerId).toUri();
+        UriComponentsBuilder.fromPath("/api/v1/owners/{id}").buildAndExpand(createdOwnerId).toUri();
 
     return ResponseEntity.created(createdOwnerLocation).build();
   }
 
-  @GetMapping("/checkPhoneNumberNotYetUsed")
+  @PostMapping(
+      value = "/actions/check-phone-number-duplicated",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
-      summary = "Check whether any other owner does not use the phone number",
+      summary = "Check whether the phone number is duplicated",
       responses = {
         @ApiResponse(
             responseCode = "200",
-            description = "The phone number is not used by any owner"),
-        @ApiResponse(
-            responseCode = "400",
-            description = "The phone number is already used by another owner")
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema =
+                        @Schema(implementation = CheckOwnerPhoneNumberDuplicatedResponse.class))),
       })
-  public ResponseEntity<Void> checkPhoneNumberNotYetUsed(
-      @Valid @RequestParam(name = "phone_number") String phoneNumber) {
-    checkingOwnerPhoneNumberNotYetUsedService.checkPhoneNumberNotYetUsed(phoneNumber);
-    return ResponseEntity.ok().build();
+  public ResponseEntity<CheckOwnerPhoneNumberDuplicatedResponse> checkPhoneNumberDuplicated(
+      @RequestBody final CheckOwnerPhoneNumberDuplicatedRequest request) {
+    final boolean duplicated =
+        checkOwnerPhoneNumberDuplicatedService.checkPhoneNumberDuplicated(request.getPhoneNumber());
+
+    final CheckOwnerPhoneNumberDuplicatedResponse responseBody =
+        CheckOwnerPhoneNumberDuplicatedResponse.builder().duplicated(duplicated).build();
+
+    return ResponseEntity.ok(responseBody);
+  }
+
+  @PostMapping(
+      value = "/actions/check-email-duplicated",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(
+      summary = "Check whether the email is duplicated",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            content =
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = CheckOwnerEmailDuplicatedResponse.class))),
+      })
+  public ResponseEntity<CheckOwnerEmailDuplicatedResponse> checkEmailNotYetUsed(
+      @RequestBody final CheckOwnerEmailDuplicatedRequest request) {
+    final boolean duplicated =
+        checkingOwnerEmailNotYetUsed.checkEmailDuplicated(request.getEmail());
+
+    final CheckOwnerEmailDuplicatedResponse responseBody =
+        CheckOwnerEmailDuplicatedResponse.builder().duplicated(duplicated).build();
+
+    return ResponseEntity.ok(responseBody);
   }
 }

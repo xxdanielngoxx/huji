@@ -40,13 +40,13 @@ describe('RegisterOwnerService', () => {
     );
 
     const httpTestRequest: TestRequest = httpTesting.expectOne({
-      url: '/api/owners',
+      url: '/api/v1/owners',
       method: 'POST',
     });
     expect(httpTestRequest.request.body).toEqual(registerOwnerRequest);
 
     const mockLocationHeader =
-      '/api/owners/de780ca6-dfe7-43ef-ac02-042a0f1a03eb';
+      '/api/v1/owners/de780ca6-dfe7-43ef-ac02-042a0f1a03eb';
     httpTestRequest.flush(null, {
       headers: {
         Location: mockLocationHeader,
@@ -73,7 +73,7 @@ describe('RegisterOwnerService', () => {
     );
 
     const httpTestRequest: TestRequest = httpTesting.expectOne({
-      url: '/api/owners',
+      url: '/api/v1/owners',
       method: 'POST',
     });
     expect(httpTestRequest.request.body).toEqual(registerOwnerRequest);

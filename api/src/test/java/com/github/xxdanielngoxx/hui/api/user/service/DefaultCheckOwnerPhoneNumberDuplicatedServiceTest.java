@@ -1,10 +1,10 @@
 package com.github.xxdanielngoxx.hui.api.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import com.github.xxdanielngoxx.hui.api.user.repository.OwnerRepository;
 import org.junit.jupiter.api.Test;
@@ -14,35 +14,40 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultCheckingOwnerPhoneNumberNotYetUsedServiceTest {
+class DefaultCheckOwnerPhoneNumberDuplicatedServiceTest {
 
-  @InjectMocks private DefaultCheckingOwnerPhoneNumberNotYetUsedService service;
+  @InjectMocks private DefaultCheckOwnerPhoneNumberDuplicatedService service;
 
   @Mock private OwnerRepository ownerRepository;
 
   @Test
-  void should_do_nothing_when_phone_number_is_not_used_by_any_owner() {
+  void should_return_true_when_phone_number_is_not_duplicated() {
     final String phoneNumber = "0393238017";
 
     given(ownerRepository.existsByPhoneNumber(phoneNumber)).willReturn(false);
 
-    service.checkPhoneNumberNotYetUsed(phoneNumber);
+    assertThat(service.checkPhoneNumberDuplicated(phoneNumber)).isFalse();
 
     then(ownerRepository).should(times(1)).existsByPhoneNumber(phoneNumber);
   }
 
   @Test
-  void should_throw_exception_when_phone_number_is_used_by_another_owner() {
+  void should_return_false_when_phone_number_is_blank() {
+    assertThat(service.checkPhoneNumberDuplicated(null)).isFalse();
+    assertThat(service.checkPhoneNumberDuplicated("")).isFalse();
+    assertThat(service.checkPhoneNumberDuplicated(" ")).isFalse();
+    assertThat(service.checkPhoneNumberDuplicated("  ")).isFalse();
+
+    verifyNoInteractions(ownerRepository);
+  }
+
+  @Test
+  void should_return_true_when_phone_number_is_duplicated() {
     final String phoneNumber = "0393238017";
 
     given(ownerRepository.existsByPhoneNumber(phoneNumber)).willReturn(true);
 
-    final IllegalArgumentException exception =
-        assertThrows(
-            IllegalArgumentException.class, () -> service.checkPhoneNumberNotYetUsed(phoneNumber));
-
-    assertThat(exception.getMessage())
-        .contains(String.format("phone number %s is already used by another owner", phoneNumber));
+    assertThat(service.checkPhoneNumberDuplicated(phoneNumber)).isTrue();
 
     then(ownerRepository).should(times(1)).existsByPhoneNumber(phoneNumber);
   }

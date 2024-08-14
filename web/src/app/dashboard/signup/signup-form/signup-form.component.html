@@ -17,7 +17,7 @@
         @if (phoneNumber.hasError('pattern')) {
           <mat-error>Số điện thoại không hợp lệ</mat-error>
         }
-        @if (phoneNumber.hasError('uniquePhoneNumber')) {
+        @if (phoneNumber.hasError('duplicatedPhoneNumber')) {
           <mat-error>Số điện thoại đã được đăng ký bởi chủ hụi khác</mat-error>
         }
       </mat-form-field>
@@ -65,6 +65,9 @@
             showConfirmPassword() ? 'visibility' : 'visibility_off'
           }}</mat-icon>
         </button>
+        @if (confirmPassword.hasError('required')) {
+          <mat-error>Mật khẩu xác nhận không được để trống</mat-error>
+        }
         @if (confirmPassword.hasError('confirmPasswordMismatch')) {
           <mat-error>Mật khẩu xác nhận phải trùng với mật khẩu</mat-error>
         }
@@ -74,6 +77,9 @@
         <input matInput [formControl]="email" placeholder="Email" email />
         @if (email.hasError('email')) {
           <mat-error>Email không hợp lệ</mat-error>
+        }
+        @if (email.hasError('duplicatedEmail')) {
+          <mat-error>Email đã được đăng ký bởi chủ hụi khác</mat-error>
         }
       </mat-form-field>
       <div class="signup-form__action">
