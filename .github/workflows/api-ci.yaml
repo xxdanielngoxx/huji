@@ -12,12 +12,12 @@ on:
     branches: ["main"]
     paths:
       - "api/**"
-      - "./github/workflows/api-ci.yaml"
+      - ".github/workflows/api-ci.yaml"
   pull_request:
     branches: ["main"]
     paths:
       - "api/**"
-      - "./github/workflows/api-ci.yaml"
+      - ".github/workflows/api-ci.yaml"
   workflow_dispatch:
 
 jobs:

@@ -8,12 +8,12 @@ on:
     branches: ["main"]
     paths:
       - "web/**"
-      - "./github/workflows/web-ci.yaml"
+      - ".github/workflows/web-ci.yaml"
   pull_request:
     branches: ["main"]
     paths:
       - "web/**"
-      - "./github/workflows/web-ci.yaml"
+      - ".github/workflows/web-ci.yaml"
   workflow_dispatch:
 
 jobs:
