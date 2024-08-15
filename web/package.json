@@ -11,12 +11,6 @@
     "lint:fix": "ng lint --quiet --fix",
     "prettier:fix": "npx prettier --write --ignore-unknown ."
   },
-  "lint-staged": {
-    "*": [
-      "ng lint --quiet --fix",
-      "prettier --write --ignore-unknown ."
-    ]
-  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.1.0",

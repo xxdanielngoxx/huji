@@ -11,13 +11,13 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "./github/workflows/api-ci.yaml"
       - "api/**"
+      - "./github/workflows/api-ci.yaml"
   pull_request:
     branches: ["main"]
     paths:
-      - "./github/workflows/api-ci.yaml"
       - "api/**"
+      - "./github/workflows/api-ci.yaml"
   workflow_dispatch:
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
       - name: Upload test report
         uses: actions/upload-artifact@v4
         with:
-          name: Test report
+          name: api-test-report
           path: ./api/build/reports
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
