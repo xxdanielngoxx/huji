@@ -20,7 +20,10 @@ public class OpenAPIConfig {
     final Info info = new Info().title("Huji API").version(buildProperties.getVersion());
 
     final SecurityScheme bearerScheme =
-        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT");
+        new SecurityScheme()
+            .type(SecurityScheme.Type.HTTP)
+            .scheme(BEARER_SECURITY_SCHEMA_KEY)
+            .bearerFormat("JWT");
 
     final Components components =
         new Components().addSecuritySchemes(BEARER_SECURITY_SCHEMA_KEY, bearerScheme);
