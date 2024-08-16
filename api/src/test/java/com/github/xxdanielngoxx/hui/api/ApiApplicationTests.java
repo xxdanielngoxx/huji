@@ -9,5 +9,7 @@ import org.springframework.context.annotation.Import;
 class ApiApplicationTests {
 
   @Test
-  void contextLoads() {}
+  void contextLoads() {
+    // Load the context to ensure the application can start without any errors
+  }
 }
