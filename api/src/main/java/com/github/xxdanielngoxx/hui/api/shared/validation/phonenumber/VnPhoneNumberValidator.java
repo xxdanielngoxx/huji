@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class VnPhoneNumberValidator implements ConstraintValidator<VnPhoneNumber, String> {
 
-  public static final String REGEX_PATTERN = "^(?:\\+84|0084|0)[235789][0-9]{8}$";
+  public static final String REGEX_PATTERN = "^(?:\\+84|0084|0)[235789]\\d{8}$";
 
   public static final String ERROR_MESSAGE = "must be a well-formed Vietnam phone number";
 
