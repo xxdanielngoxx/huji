@@ -23,6 +23,10 @@ describe('DuplicatedPhoneNumberValidator', () => {
     validator = TestBed.inject(DuplicatedPhoneNumberValidator);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should return duplicatedPhoneNumber error when phone number is duplicated', async () => {
     mockCheckOwnerPhoneNumberDuplicatedService.checkPhoneNumberDuplicated.mockReturnValue(
       of(true)
@@ -36,6 +40,9 @@ describe('DuplicatedPhoneNumberValidator', () => {
     );
 
     expect(await resultPromise).toEqual({ duplicatedPhoneNumber: true });
+    expect(
+      mockCheckOwnerPhoneNumberDuplicatedService.checkPhoneNumberDuplicated
+    ).toHaveBeenCalledWith(phoneNumberControl.value);
   });
 
   it('should return null when phone number is not duplicated', async () => {
@@ -51,5 +58,26 @@ describe('DuplicatedPhoneNumberValidator', () => {
     );
 
     expect(await resultPromise).toEqual(null);
+    expect(
+      mockCheckOwnerPhoneNumberDuplicatedService.checkPhoneNumberDuplicated
+    ).toHaveBeenCalledWith(phoneNumberControl.value);
+  });
+
+  it('should return false and not call api to check duplicated phone number when control value is blank', async () => {
+    mockCheckOwnerPhoneNumberDuplicatedService.checkPhoneNumberDuplicated.mockReturnValue(
+      of(false)
+    );
+
+    const phoneNumberControl = new FormControl('');
+    const resultPromise: Promise<ValidationErrors | null> = lastValueFrom(
+      validator.validate(
+        phoneNumberControl
+      ) as Observable<ValidationErrors | null>
+    );
+
+    expect(await resultPromise).toEqual(null);
+    expect(
+      mockCheckOwnerPhoneNumberDuplicatedService.checkPhoneNumberDuplicated
+    ).toHaveBeenCalledTimes(0);
   });
 });

@@ -23,6 +23,10 @@ describe('DuplicatedEmailValidator', () => {
     validator = TestBed.inject(DuplicatedEmailValidator);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should return duplicatedEmail error when email is duplicated', async () => {
     checkOwnerEmailDuplicatedService.checkEmailDuplicated.mockReturnValue(
       of(true)
@@ -34,6 +38,9 @@ describe('DuplicatedEmailValidator', () => {
     );
 
     expect(await resultPromise).toEqual({ duplicatedEmail: true });
+    expect(
+      checkOwnerEmailDuplicatedService.checkEmailDuplicated
+    ).toHaveBeenCalledWith(emailControl.value);
   });
 
   it('should return null when email is not duplicated', async () => {
@@ -47,5 +54,24 @@ describe('DuplicatedEmailValidator', () => {
     );
 
     expect(await resultPromise).toEqual(null);
+    expect(
+      checkOwnerEmailDuplicatedService.checkEmailDuplicated
+    ).toHaveBeenCalledWith(emailControl.value);
+  });
+
+  it('should return false and not call api to check duplicated email when control value is blank', async () => {
+    checkOwnerEmailDuplicatedService.checkEmailDuplicated.mockReturnValue(
+      of(false)
+    );
+
+    const emailControl = new FormControl('');
+    const resultPromise: Promise<ValidationErrors | null> = lastValueFrom(
+      validator.validate(emailControl) as Observable<ValidationErrors | null>
+    );
+
+    expect(await resultPromise).toEqual(null);
+    expect(
+      checkOwnerEmailDuplicatedService.checkEmailDuplicated
+    ).toHaveBeenCalledTimes(0);
   });
 });
