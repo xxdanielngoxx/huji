@@ -6,13 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebappController {
 
-  @GetMapping("/")
+  @GetMapping(value = {"/", "/webapp"})
   public String index() {
-    return "forward:/webapp/index.html";
-  }
-
-  @GetMapping("/webapp")
-  public String webapp() {
     return "forward:/webapp/index.html";
   }
 }
