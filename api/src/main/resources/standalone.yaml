@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    driver-class-name: org.hsqldb.jdbc.JDBCDriver
-    url: jdbc:hsqldb:mem:huji;shutdown=false
-    username: sa
-    password:

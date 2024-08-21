@@ -2,9 +2,13 @@ package com.github.xxdanielngoxx.hui.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 
-@Import(TestcontainersConfiguration.class)
+/*
+ * TODO: Revert when setup CD is done
+ * @Import({PostgresTestcontainerConfiguration.class})
+ */
+@Profile("test") // TODO: Remove when setup CD is done
 @SpringBootTest
 class ApiApplicationTests {
 
