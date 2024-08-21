@@ -15,7 +15,7 @@ updates:
 
   # Maintain dependencies for api
   - package-ecosystem: "gradle"
-    directory: "/"
+    directory: "/api"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 0
@@ -23,6 +23,13 @@ updates:
   # Maintain dependencies for web
   - package-ecosystem: "npm"
     directory: "/web"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 0
+
+  # Maintain dependencies for infrastructure
+  - package-ecosystem: "npm"
+    directory: "/infrastructure"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 0
