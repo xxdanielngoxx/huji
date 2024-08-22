@@ -18,7 +18,9 @@ on:
         required: true
 
 jobs:
-  build:
+  deploy:
+    name: "Deploy ecr repository stack"
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     strategy:
