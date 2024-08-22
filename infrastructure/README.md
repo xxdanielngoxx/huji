@@ -1,10 +1,17 @@
-# Welcome to your CDK TypeScript project
+# Infrastructure project
 
-This is a blank project for CDK development with TypeScript.
+The purpose of the infrastructure project is to manage infrastructure and deployment.
+
+## Bootstrap CDK
+Bootstrapping is the process of preparing your AWS environment for usage with the AWS Cloud Development Kit (AWS CDK). Before you deploy a CDK stack into an AWS environment, the environment must first be bootstrapped.
+
+Access this [document](https://docs.aws.amazon.com/cdk/v1/guide/bootstrapping.html) to learn how to bootstrap the AWS CDK project.
+
+## CDK
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
-## Useful commands
+### Useful commands
 
 * `npm run build`   compile typescript to js
 * `npm run watch`   watch for changes and compile
