@@ -1,18 +1,21 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: CDK Bootstrap
+name: ECR Repository Stack Deployment
+
+env:
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - ".github/workflows/cdk-bootstrap.yaml"
-  pull_request:
-    branches: ["main"]
-    paths:
-      - ".github/workflows/cdk-bootstrap.yaml"
   workflow_dispatch:
+    inputs:
+      projectName:
+        description: "Project name"
+        type: string
+        required: true
 
 jobs:
   build:
@@ -33,6 +36,6 @@ jobs:
       - name: Install
         working-directory: ./infrastructure
         run: npm ci
-      - name: Bootstrap CDK
+      - name: Deploy ECR repository stack
         working-directory: ./infrastructure
-        run: npm run cdk bootstrap
+        run: npm run cdk -- deploy ECRRepositoryStack --context accountId=${AWS_ACCOUNT_ID} --context region=${AWS_DEFAULT_REGION} --context projectName=api

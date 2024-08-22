@@ -11,6 +11,8 @@ const env: cdk.Environment = {
 };
 
 const ecrRepositoryStack = new ECRRepositoryStack(app, "ECRRepositoryStack", {
-  repositoryName: "com.github.xxdanielngoxx/hui/api",
+  repositoryName: `com.github.xxdanielngoxx/hui/${app.node.getContext(
+    "projectName"
+  )}`,
   env,
 });
