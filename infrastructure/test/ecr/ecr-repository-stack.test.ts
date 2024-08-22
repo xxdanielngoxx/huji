@@ -19,18 +19,17 @@ describe("ECRRepositoryStack", () => {
     template.hasResourceProperties(
       "AWS::ECR::Repository",
       Match.objectEquals({
-        ImageTagMutability: "MUTABLE",
+        ImageTagMutability: "IMMUTABLE",
         LifecyclePolicy: {
           LifecyclePolicyText: Match.serializedJson({
             rules: [
               {
                 rulePriority: 1,
-                description: "Delete untagged image after 3 days",
+                description: "Retain maximum 25 images",
                 selection: {
-                  tagStatus: "untagged",
-                  countType: "sinceImagePushed",
-                  countNumber: 3,
-                  countUnit: "days",
+                  tagStatus: "any",
+                  countType: "imageCountMoreThan",
+                  countNumber: 25,
                 },
                 action: { type: "expire" },
               },

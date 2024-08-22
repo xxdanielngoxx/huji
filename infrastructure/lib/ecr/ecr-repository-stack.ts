@@ -1,4 +1,4 @@
-import { Duration, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import {
   IRepository,
   Repository,
@@ -22,13 +22,13 @@ export class ECRRepositoryStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [
         {
-          description: `Delete untagged image after 3 days`,
+          description: `Retain maximum 25 images`,
           rulePriority: 1,
-          tagStatus: TagStatus.UNTAGGED,
-          maxImageAge: Duration.days(3),
+          tagStatus: TagStatus.ANY,
+          maxImageCount: 25,
         },
       ],
-      imageTagMutability: TagMutability.MUTABLE,
+      imageTagMutability: TagMutability.IMMUTABLE,
     });
   }
 }
