@@ -1,0 +1,38 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: CDK Bootstrap
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/cdk-bootstrap.yaml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/cdk-bootstrap.yaml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install
+        working-directory: ./infrastructure
+        run: npm ci
+      - name: Bootstrap CDK
+        working-directory: ./infrastructure
+        run: npm run cdk bootstrap
