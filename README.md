@@ -13,7 +13,7 @@ cd web
 ### Run the API application
 #### Spin up the dependencies
 ```sh
-cd dev
+cd devtools
 docker compose up
 ```
 

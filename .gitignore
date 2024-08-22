@@ -42,4 +42,4 @@ testem.log
 Thumbs.db
 
 # Local postgresql data
-/dev/postgresql
+/devtools/postgresql
