@@ -40,4 +40,9 @@ jobs:
         run: npm ci
       - name: Deploy ECR repository stack
         working-directory: ./infrastructure
-        run: npm run cdk -- deploy ECRRepositoryStack --context accountId=${AWS_ACCOUNT_ID} --context region=${AWS_DEFAULT_REGION} --context projectName=api
+        run: |
+          npm run cdk -- \
+          deploy ECRRepositoryStack \
+          --context accountId=${AWS_ACCOUNT_ID} \
+          --context region=${AWS_DEFAULT_REGION} \
+          --context projectName=api
