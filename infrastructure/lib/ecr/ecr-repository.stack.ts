@@ -1,4 +1,4 @@
-import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import { RemovalPolicy, Stack, StackProps, Tags } from "aws-cdk-lib";
 import {
   IRepository,
   Repository,
@@ -6,6 +6,10 @@ import {
   TagStatus,
 } from "aws-cdk-lib/aws-ecr";
 import { Construct } from "constructs";
+import {
+  APPLICATION_TAG_KEY,
+  APPLICATION_TAG_VALUE,
+} from "../constant/tag.constant";
 
 export interface ECRRepositoryStackProps extends StackProps {
   readonly repositoryName: string;
@@ -14,11 +18,17 @@ export interface ECRRepositoryStackProps extends StackProps {
 export class ECRRepositoryStack extends Stack {
   private readonly ecrRepository: IRepository;
 
-  constructor(scope?: Construct, id?: string, props?: ECRRepositoryStackProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, props: ECRRepositoryStackProps) {
+    super(scope, "ECRRepositoryStack", props);
 
-    this.ecrRepository = new Repository(this, "ecrRepository", {
-      repositoryName: props?.repositoryName,
+    this.ecrRepository = this.createEcrRepository(props);
+
+    this.createTags();
+  }
+
+  private createEcrRepository(props: ECRRepositoryStackProps): IRepository {
+    return new Repository(this, "ecrRepository", {
+      repositoryName: props.repositoryName,
       removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [
         {
@@ -30,5 +40,9 @@ export class ECRRepositoryStack extends Stack {
       ],
       imageTagMutability: TagMutability.IMMUTABLE,
     });
+  }
+
+  private createTags(): void {
+    Tags.of(this).add(APPLICATION_TAG_KEY, APPLICATION_TAG_VALUE);
   }
 }
