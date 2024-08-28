@@ -45,4 +45,4 @@ jobs:
           deploy ECRRepositoryStack \
           --context accountId=${AWS_ACCOUNT_ID} \
           --context region=${AWS_DEFAULT_REGION} \
-          --context projectName=api
+          --context projectName=${{ github.event.inputs.message }}
