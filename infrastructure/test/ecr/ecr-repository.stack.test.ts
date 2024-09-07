@@ -11,7 +11,7 @@ describe("ECRRepositoryStack", () => {
     const app = new App();
 
     const ecrRepositoryStack = new ECRRepositoryStack(app, {
-      repositoryName: "com.github.xxdanielngoxx/hui/api",
+      repositoryName: "com.github.xxdanielngoxx/huji/api",
     });
 
     const template = Template.fromStack(ecrRepositoryStack);
@@ -36,7 +36,7 @@ describe("ECRRepositoryStack", () => {
             ],
           }),
         },
-        RepositoryName: "com.github.xxdanielngoxx/hui/api",
+        RepositoryName: "com.github.xxdanielngoxx/huji/api",
         Tags: Match.arrayWith([
           {
             Key: APPLICATION_TAG_KEY,
