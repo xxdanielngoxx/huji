@@ -10,9 +10,10 @@ import {
   APPLICATION_TAG_KEY,
   APPLICATION_TAG_VALUE,
 } from "../constant/tag.constant";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 export interface ECRRepositoryStackProps extends StackProps {
-  readonly repositoryName: string;
+  readonly projectName: string;
 }
 
 export class ECRRepositoryStack extends Stack {
@@ -21,12 +22,19 @@ export class ECRRepositoryStack extends Stack {
   constructor(scope: Construct, props: ECRRepositoryStackProps) {
     super(scope, "ECRRepositoryStack", props);
 
-    this.ecrRepository = this.createEcrRepository(props);
+    const repositoryName = `com.github.xxdanielngoxx/huji/${props.projectName}`;
+
+    this.ecrRepository = this.createEcrRepository({ repositoryName });
+
+    this.exportEcrRepositoryParameter({
+      repositoryName,
+      projectName: props.projectName,
+    });
 
     this.createTags();
   }
 
-  private createEcrRepository(props: ECRRepositoryStackProps): IRepository {
+  private createEcrRepository(props: { repositoryName: string }): IRepository {
     return new Repository(this, "ecrRepository", {
       repositoryName: props.repositoryName,
       removalPolicy: RemovalPolicy.DESTROY,
@@ -39,6 +47,16 @@ export class ECRRepositoryStack extends Stack {
         },
       ],
       imageTagMutability: TagMutability.IMMUTABLE,
+    });
+  }
+
+  private exportEcrRepositoryParameter(props: {
+    repositoryName: string;
+    projectName: string;
+  }): void {
+    new StringParameter(this, "RepositoryName", {
+      stringValue: props.repositoryName,
+      parameterName: `huji-${props.projectName}-repository-name`,
     });
   }
 

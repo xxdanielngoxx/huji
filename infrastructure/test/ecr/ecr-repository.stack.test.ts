@@ -7,15 +7,14 @@ import {
 } from "../../lib/constant/tag.constant";
 
 describe("ECRRepositoryStack", () => {
+  const app = new App();
+
+  const ecrRepositoryStack = new ECRRepositoryStack(app, {
+    projectName: "api",
+  });
+
+  const template = Template.fromStack(ecrRepositoryStack);
   test("should synthesized as expected", () => {
-    const app = new App();
-
-    const ecrRepositoryStack = new ECRRepositoryStack(app, {
-      repositoryName: "com.github.xxdanielngoxx/huji/api",
-    });
-
-    const template = Template.fromStack(ecrRepositoryStack);
-
     template.hasResourceProperties(
       "AWS::ECR::Repository",
       Match.objectEquals({
@@ -45,5 +44,12 @@ describe("ECRRepositoryStack", () => {
         ]),
       })
     );
+  });
+
+  test("should store repository name to ssm parameter", () => {
+    template.hasResourceProperties("AWS::SSM::Parameter", {
+      Name: "huji-api-repository-name",
+      Value: "com.github.xxdanielngoxx/huji/api",
+    });
   });
 });
