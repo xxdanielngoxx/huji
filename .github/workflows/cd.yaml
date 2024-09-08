@@ -59,7 +59,7 @@ jobs:
           aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | \
           docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
 
-      - name: Build docker image
+      - name: Build docker image and push to ECR
         working-directory: ./api
         run: |
           if [[ ${{ github.ref_name }} =~ ^\d+\.\d+\.\d$ ]]
@@ -68,12 +68,13 @@ jobs:
             -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }} \
             -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }} \
             .
+            docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }}
+            docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}
           else
             docker build \
             -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }} \
             -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}-${{ github.sha }} \
             .
+            docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }}
+            docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}-${{ github.sha }}
           fi
-
-      - name: Publish docker image to ECR
-        run: docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }}
