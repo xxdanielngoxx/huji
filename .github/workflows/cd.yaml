@@ -65,13 +65,13 @@ jobs:
           if [[ ${{ github.ref_name }} =~ ^\d+\.\d+\.\d$ ]]
           then
             docker build \
-            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }} \
             -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }} \
+            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }} \
             .
           else
             docker build \
-            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}-${{ github.sha }} \
             -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }} \
+            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}-${{ github.sha }} \
             .
           fi
 
