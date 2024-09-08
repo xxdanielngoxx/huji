@@ -62,10 +62,18 @@ jobs:
       - name: Build docker image
         working-directory: ./api
         run: |
-          docker build \
-          -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }} \
-          -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }} \
-          .
+          if [[ ${{ github.ref_name }} =~ ^\d+\.\d+\.\d$ ]]
+          then
+            docker build \
+            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }} \
+            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }} \
+            .
+          else
+            docker build \
+            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}-${{ github.sha }} \
+            -t ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }} \
+            .
+          fi
 
       - name: Publish docker image to ECR
-        run: docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}
+        run: docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }}
