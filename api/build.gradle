@@ -106,9 +106,6 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	runtimeOnly 'org.hsqldb:hsqldb:2.7.3' // TODO: Remove when setup CD is done
-	implementation "org.flywaydb:flyway-database-hsqldb" // TODO: Remove when setup CD is done
 }
 
 tasks.named('test') {

@@ -3,6 +3,7 @@ package com.github.xxdanielngoxx.hui.api.owner.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.github.xxdanielngoxx.hui.api.PostgresTestcontainerConfiguration;
 import com.github.xxdanielngoxx.hui.api.owner.model.OwnerEntity;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,11 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-/*
- * TODO: Revert when setup CD is done
- * @Import({PostgresTestcontainerConfiguration.class})
- */
-@Profile("test") // TODO: Remove when setup CD is done
+@Import({PostgresTestcontainerConfiguration.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class OwnerRepositoryTest {
 
@@ -90,14 +87,9 @@ class OwnerRepositoryTest {
           assertThrows(
               DataIntegrityViolationException.class, () -> ownerRepository.save(invalidOwner));
 
-      /*
-       * TODO: Revert when setup CD is done
-       *
-       * final String expectedErrorMessage =
-       *    String.format("(phone_number)=(%s) already exists", invalidOwner.getPhoneNumber());
-       * assertThat(exception.getMessage()).contains(expectedErrorMessage);
-       *
-       * */
+      final String expectedErrorMessage =
+          String.format("(phone_number)=(%s) already exists", invalidOwner.getPhoneNumber());
+      assertThat(exception.getMessage()).contains(expectedErrorMessage);
     }
 
     @Test
@@ -124,14 +116,9 @@ class OwnerRepositoryTest {
           assertThrows(
               DataIntegrityViolationException.class, () -> ownerRepository.save(invalidOwner));
 
-      /*
-       * TODO: Revert when setup CD is done
-       *
-       * final String expectedErrorMessage =
-       *   String.format("(email)=(%s) already exists", invalidOwner.getEmail());
-       * assertThat(exception.getMessage()).contains(expectedErrorMessage);
-       *
-       * */
+      final String expectedErrorMessage =
+          String.format("(email)=(%s) already exists", invalidOwner.getEmail());
+      assertThat(exception.getMessage()).contains(expectedErrorMessage);
     }
   }
 
