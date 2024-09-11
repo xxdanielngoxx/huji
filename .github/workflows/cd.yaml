@@ -41,7 +41,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - name: Install
+      - name: Install dependencies for web
         working-directory: ./web
         run: npm ci
 
@@ -87,10 +87,14 @@ jobs:
             docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}-${{ github.sha }}
           fi
 
+      - name: Install depedencies for infrastructure
+        working-directory: ./infrastructure
+        run: npm ci
+
       - name: Deploy to AWS
         working-directory: ./infrastructure
         run: |
-          npm run cdk -- synth MainStack \
+          npm run cdk -- deploy MainStack \
           --context accountId=${AWS_ACCOUNT_ID} \
           --context region=${AWS_DEFAULT_REGION} \
           --context environmentName=${{ github.event.inputs.environmentName }} \
