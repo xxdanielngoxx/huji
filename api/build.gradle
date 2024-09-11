@@ -106,6 +106,8 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'com.github.spotbugs:spotbugs-annotations:4.8.6'
 }
 
 tasks.named('test') {
