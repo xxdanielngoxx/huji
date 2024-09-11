@@ -2,6 +2,14 @@ name: Continuous Deployment
 
 on:
   workflow_dispatch:
+    inputs:
+      environmentName:
+        description: Environment name
+        options:
+          - development
+          - production
+        default: development
+        required: true
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -78,3 +86,13 @@ jobs:
             docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.sha }}
             docker push ${ECR_REPOSITORY_ENDPOINT}:${{ github.ref_name }}-${{ github.sha }}
           fi
+
+      - name: Deploy to AWS
+        working-directory: ./infrastructure
+        run: |
+          npm run cdk -- synth MainStack \
+          --context accountId=${AWS_ACCOUNT_ID} \
+          --context region=${AWS_DEFAULT_REGION} \
+          --context environmentName=${{ github.event.inputs.environmentName }} \
+          --context imageTag=${{ github.sha }} \
+          --require-approval never
