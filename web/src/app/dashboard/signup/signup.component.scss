@@ -11,14 +11,14 @@
 .signup-container {
   min-height: 100dvh;
 
-  margin: 0 128px;
+  padding: 64px 128px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   @media screen and (max-width: 960px) {
-    margin: 0;
+    padding: 0;
   }
 }
 
