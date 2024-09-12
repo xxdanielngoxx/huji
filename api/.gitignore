@@ -38,3 +38,6 @@ out/
 
 ### Angular Web Application Build ###
 src/main/resources/static/webapp/
+
+### Key Store Secret ###
+src/main/resources/keystore/secrets.txt
