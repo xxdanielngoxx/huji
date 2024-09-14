@@ -16,7 +16,7 @@ export class CheckOwnerEmailDuplicatedService {
     };
     return this.httpClient
       .post<CheckOwnerEmailDuplicatedResponse>(
-        '/api/v1/owners/actions/check-email-duplicated',
+        '/api/v1/users/actions/check-email-duplicated',
         request
       )
       .pipe(

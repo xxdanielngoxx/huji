@@ -16,7 +16,7 @@ export class CheckOwnerPhoneNumberDuplicatedService {
     };
     return this.httpClient
       .post<CheckOwnerPhoneNumberDuplicatedResponse>(
-        '/api/v1/owners/actions/check-phone-number-duplicated',
+        '/api/v1/users/actions/check-phone-number-duplicated',
         request
       )
       .pipe(

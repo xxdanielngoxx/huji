@@ -6,6 +6,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
+import com.github.xxdanielngoxx.hui.api.auth.model.Role;
+import com.github.xxdanielngoxx.hui.api.auth.model.UserEntity;
+import com.github.xxdanielngoxx.hui.api.auth.service.CreateUserService;
+import com.github.xxdanielngoxx.hui.api.auth.service.GetUserByIdService;
+import com.github.xxdanielngoxx.hui.api.auth.service.command.CreateUserCommand;
 import com.github.xxdanielngoxx.hui.api.owner.model.OwnerEntity;
 import com.github.xxdanielngoxx.hui.api.owner.repository.OwnerRepository;
 import com.github.xxdanielngoxx.hui.api.owner.service.command.RegisterOwnerCommand;
@@ -16,7 +21,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultRegisteringOwnerServiceTest {
@@ -25,36 +29,62 @@ class DefaultRegisteringOwnerServiceTest {
 
   @Mock private OwnerRepository ownerRepository;
 
-  @Mock private PasswordEncoder passwordEncoder;
+  @Mock private CreateUserService createUserService;
+
+  @Mock private GetUserByIdService getUserByIdService;
 
   @Test
   void should_save_owner_when_register() {
-    final RegisterOwnerCommand command =
+    final RegisterOwnerCommand registerOwnerCommand =
         RegisterOwnerCommand.builder()
             .fullName("Ngô Đình Lộc")
             .phoneNumber("0393238017")
-            .password("super_secret?#")
+            .password("<<redacted>>")
             .email("danielngo1998@gmail.com")
             .build();
+
+    final UUID mockSavedUserId = UUID.randomUUID();
+    given(createUserService.createUser(any(CreateUserCommand.class))).willReturn(mockSavedUserId);
+
+    final UserEntity mockSavedUser = UserEntity.builder().id(mockSavedUserId).build();
+    given(getUserByIdService.getUserById(mockSavedUserId)).willReturn(mockSavedUser);
 
     final OwnerEntity mockOwnerEntity = OwnerEntity.builder().id(UUID.randomUUID()).build();
     given(ownerRepository.save(any(OwnerEntity.class))).willReturn(mockOwnerEntity);
 
-    final String mockEncodedPassword = "super_secret_?#_encoded";
-    given(passwordEncoder.encode(command.getPassword())).willReturn(mockEncodedPassword);
-
-    final UUID ownerId = ownerService.register(command);
+    final UUID ownerId = ownerService.register(registerOwnerCommand);
 
     assertThat(ownerId).isEqualTo(mockOwnerEntity.getId());
 
-    then(passwordEncoder).should(times(1)).encode(command.getPassword());
+    // Verify interaction with CreateUserService
+    final ArgumentCaptor<CreateUserCommand> createUserCommandCaptor =
+        ArgumentCaptor.forClass(CreateUserCommand.class);
 
+    then(createUserService).should(times(1)).createUser(createUserCommandCaptor.capture());
+
+    assertThat(createUserCommandCaptor.getValue().getUsername())
+        .isEqualTo(registerOwnerCommand.getEmail());
+
+    assertThat(createUserCommandCaptor.getValue().getPassword())
+        .isEqualTo(registerOwnerCommand.getPassword());
+
+    assertThat(createUserCommandCaptor.getValue().getPhoneNumber())
+        .isEqualTo(registerOwnerCommand.getPhoneNumber());
+
+    assertThat(createUserCommandCaptor.getValue().getRole()).isEqualTo(Role.OWNER);
+
+    // Verify interaction with GetUserByIdService
+    then(getUserByIdService).should(times(1)).getUserById(mockSavedUserId);
+
+    // Verify interaction with OwnerRepository
     final ArgumentCaptor<OwnerEntity> ownerEntityCaptor =
         ArgumentCaptor.forClass(OwnerEntity.class);
+
     then(ownerRepository).should(times(1)).save(ownerEntityCaptor.capture());
-    assertThat(ownerEntityCaptor.getValue().getFullName()).isEqualTo(command.getFullName());
-    assertThat(ownerEntityCaptor.getValue().getPhoneNumber()).isEqualTo(command.getPhoneNumber());
-    assertThat(ownerEntityCaptor.getValue().getPassword()).isEqualTo(mockEncodedPassword);
-    assertThat(ownerEntityCaptor.getValue().getEmail()).isEqualTo(command.getEmail());
+
+    assertThat(ownerEntityCaptor.getValue().getFullName())
+        .isEqualTo(registerOwnerCommand.getFullName());
+
+    assertThat(ownerEntityCaptor.getValue().getUser()).isEqualTo(mockSavedUser);
   }
 }

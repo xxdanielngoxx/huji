@@ -2,6 +2,10 @@
 spring:
   application:
     name: "api"
+  jpa:
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
 
 # springdoc configuration
 springdoc:

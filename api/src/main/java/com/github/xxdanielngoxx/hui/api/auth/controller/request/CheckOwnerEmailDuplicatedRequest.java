@@ -1,4 +1,4 @@
-package com.github.xxdanielngoxx.hui.api.owner.controller.request;
+package com.github.xxdanielngoxx.hui.api.auth.controller.request;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,5 +8,5 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class CheckOwnerEmailDuplicatedRequest {
-  private String email;
+  private String username;
 }

@@ -1,4 +1,4 @@
-package com.github.xxdanielngoxx.hui.api.owner.controller.request;
+package com.github.xxdanielngoxx.hui.api.auth.controller.request;
 
 import lombok.Builder;
 import lombok.Data;

@@ -34,7 +34,7 @@ describe('CheckOwnerPhoneNumberDuplicatedService', () => {
 
     const testRequest: TestRequest = httpTesting.expectOne({
       method: 'POST',
-      url: '/api/v1/owners/actions/check-phone-number-duplicated',
+      url: '/api/v1/users/actions/check-phone-number-duplicated',
     });
     expect(testRequest.request.body).toEqual({ phoneNumber });
 
@@ -59,7 +59,7 @@ describe('CheckOwnerPhoneNumberDuplicatedService', () => {
 
     const testRequest: TestRequest = httpTesting.expectOne({
       method: 'POST',
-      url: '/api/v1/owners/actions/check-phone-number-duplicated',
+      url: '/api/v1/users/actions/check-phone-number-duplicated',
     });
     expect(testRequest.request.body).toEqual({ phoneNumber });
 
