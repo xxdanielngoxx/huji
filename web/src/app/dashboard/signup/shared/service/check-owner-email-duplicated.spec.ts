@@ -35,7 +35,7 @@ describe('CheckOwnerEmailDuplicatedService', () => {
 
     const testRequest: TestRequest = httpTesting.expectOne({
       method: 'POST',
-      url: '/api/v1/owners/actions/check-email-duplicated',
+      url: '/api/v1/users/actions/check-email-duplicated',
     });
     expect(testRequest.request.body).toEqual({ email });
 
@@ -59,7 +59,7 @@ describe('CheckOwnerEmailDuplicatedService', () => {
 
     const testRequest: TestRequest = httpTesting.expectOne({
       method: 'POST',
-      url: '/api/v1/owners/actions/check-email-duplicated',
+      url: '/api/v1/users/actions/check-email-duplicated',
     });
     expect(testRequest.request.body).toEqual({ email });
 
