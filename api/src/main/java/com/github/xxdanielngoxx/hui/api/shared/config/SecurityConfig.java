@@ -22,6 +22,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorizeHttpRequestsCustomizer ->
                 authorizeHttpRequestsCustomizer
+                    .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/auth/login")).permitAll()
                     .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/users/actions/check-phone-number-duplicated")).permitAll()
                     .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/users/actions/check-email-duplicated")).permitAll()
                     .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/owners")).permitAll()

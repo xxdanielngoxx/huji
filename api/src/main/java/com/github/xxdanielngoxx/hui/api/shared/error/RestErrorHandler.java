@@ -1,5 +1,6 @@
 package com.github.xxdanielngoxx.hui.api.shared.error;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,12 +72,42 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(apiError, apiError.getStatus());
   }
 
+  @ExceptionHandler(value = {BadCredentialsException.class})
+  public ResponseEntity<ApiError> handleBadCredentialsException(
+      @Nonnull BadCredentialsException ex, @Nonnull HttpServletRequest request) {
+
+    final ApiError apiError =
+        ApiError.builder()
+            .status(HttpStatus.UNAUTHORIZED)
+            .errors(List.of(ex.getMessage()))
+            .path(request.getRequestURI())
+            .build();
+
+    return new ResponseEntity<>(apiError, apiError.getStatus());
+  }
+
+  @ExceptionHandler(value = {JwtException.class})
+  public ResponseEntity<ApiError> handleJwtException(
+      @Nonnull JwtException ex, @Nonnull HttpServletRequest request) {
+
+    final ApiError apiError =
+        ApiError.builder()
+            .status(HttpStatus.UNAUTHORIZED)
+            .errors(List.of(ex.getMessage()))
+            .path(request.getRequestURI())
+            .build();
+
+    log.error("[{}]: {}", apiError.getErrorId(), ex.getMessage(), ex);
+
+    return new ResponseEntity<>(apiError, apiError.getStatus());
+  }
+
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
-      HttpMessageNotReadableException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @Nonnull HttpMessageNotReadableException ex,
+      @Nonnull HttpHeaders headers,
+      @Nonnull HttpStatusCode status,
+      @Nonnull WebRequest request) {
     log.error("{}", ex.getMessage(), ex);
     return super.handleHttpMessageNotReadable(ex, headers, status, request);
   }

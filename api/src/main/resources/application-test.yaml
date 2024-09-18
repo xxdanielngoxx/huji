@@ -4,3 +4,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+huji:
+  security:
+    jwt:
+      signing-key: v4Gf29iN0bxJekFIq5Hs3k1LI8xKkEkDTjQ0x0CCHp3R+73XKV4848xUjGogyNHugRzq/rFEDhY8dlLvDWu9lA==
+      expiration-in-seconds: 3600

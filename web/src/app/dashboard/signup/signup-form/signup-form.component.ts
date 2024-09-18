@@ -117,7 +117,7 @@ export class SignupFormComponent implements OnDestroy {
       .registerOwner({
         fullName: this.fullName.value ?? '',
         phoneNumber: this.phoneNumber.value ?? '',
-        password: this.phoneNumber.value ?? '',
+        password: this.password.value ?? '',
         email: this.email.value ?? '',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))

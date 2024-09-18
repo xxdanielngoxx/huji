@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.github.xxdanielngoxx.hui.api.PostgresTestcontainerConfiguration;
 import com.github.xxdanielngoxx.hui.api.auth.model.Role;
 import com.github.xxdanielngoxx.hui.api.auth.model.UserEntity;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -176,6 +177,45 @@ class UserRepositoryTest {
       final boolean result = userRepository.existsByUsername(username);
 
       assertThat(result).isFalse();
+    }
+  }
+
+  @Nested
+  class FindByUsernameOrPhoneNumberTest {
+
+    @Test
+    void should_return_user_when_username_or_phone_number_is_matched() {
+      final UserEntity user =
+          UserEntity.builder()
+              .username("danielngo1998@gmail.com")
+              .phoneNumber("0393238017")
+              .role(Role.OWNER)
+              .build();
+
+      userRepository.save(user);
+
+      final UserEntity foundUserByUsername =
+          userRepository.findByUsernameOrPhoneNumber(user.getUsername()).orElseThrow();
+      assertThat(foundUserByUsername.getUsername()).isEqualTo(user.getUsername());
+
+      final UserEntity foundUserByPhoneNumber =
+          userRepository.findByUsernameOrPhoneNumber(user.getPhoneNumber()).orElseThrow();
+      assertThat(foundUserByPhoneNumber.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
+
+      assertThat(foundUserByUsername.getId()).isEqualTo(foundUserByPhoneNumber.getId());
+    }
+
+    @Test
+    void should_return_empty_when_username_is_not_matched() {
+      final String username = "danielngo1998@gmail.com";
+      assertThat(userRepository.findByUsernameOrPhoneNumber(username)).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    void should_return_empty_when_phone_number_is_not_matched() {
+      final String phoneNumber = "0393238017";
+      assertThat(userRepository.findByUsernameOrPhoneNumber(phoneNumber))
+          .isEqualTo(Optional.empty());
     }
   }
 }
