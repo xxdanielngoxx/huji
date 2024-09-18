@@ -20,3 +20,9 @@ management:
     web:
       exposure:
         include: "health,info"
+
+huji:
+  security:
+    jwt:
+      signing-key: ${HUJI_SECURITY_JWT_SIGNING_KEY}
+      expiration-in-seconds: 3600
