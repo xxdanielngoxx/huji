@@ -83,6 +83,8 @@ export class MainStack extends Stack {
 
   private readonly postgresSecretTemplate: Secret;
 
+  private readonly jwtSigningKeySecret: Secret;
+
   constructor(scope: Construct, props: MainStackProps) {
     super(scope, "MainStack", props);
 
@@ -114,6 +116,12 @@ export class MainStack extends Stack {
       },
     });
 
+    this.jwtSigningKeySecret = new Secret(this, "JwtSigningKeySecret", {
+      generateSecretString: {
+        passwordLength: 64,
+      },
+    });
+
     this.databaseInstance = this.createPostgresDatabaseInstance({
       vpc: this.vpc,
       serviceIngressSecurityGroup: this.serviceIngressSecurityGroup,
@@ -126,6 +134,8 @@ export class MainStack extends Stack {
       albHttpListener: this.albHttpListener,
       serviceIngressSecurityGroup: this.serviceIngressSecurityGroup,
       imageTag: props.imageTag,
+      postgresSecretTemplate: this.postgresSecretTemplate,
+      jwtSigningKeySecret: this.jwtSigningKeySecret,
     });
 
     this.createTags(props);
@@ -228,14 +238,22 @@ export class MainStack extends Stack {
     albHttpListener,
     serviceIngressSecurityGroup,
     imageTag,
+    postgresSecretTemplate,
+    jwtSigningKeySecret,
   }: {
     vpc: IVpc;
     cluster: ICluster;
     albHttpListener: ApplicationListener;
     serviceIngressSecurityGroup: ISecurityGroup;
     imageTag: string;
+    postgresSecretTemplate: Secret;
+    jwtSigningKeySecret: Secret;
   }): IService {
-    const taskDefinition: TaskDefinition = this.createTaskDefinition(imageTag);
+    const taskDefinition: TaskDefinition = this.createTaskDefinition({
+      imageTag,
+      postgresSecretTemplate,
+      jwtSigningKeySecret,
+    });
 
     const service = new FargateService(this, "Service", {
       cluster: cluster,
@@ -289,7 +307,15 @@ export class MainStack extends Stack {
     return EcsServiceIngressSecurityGroup;
   }
 
-  private createTaskDefinition(imageTag: string): TaskDefinition {
+  private createTaskDefinition({
+    imageTag,
+    postgresSecretTemplate,
+    jwtSigningKeySecret,
+  }: {
+    imageTag: string;
+    postgresSecretTemplate: Secret;
+    jwtSigningKeySecret: Secret;
+  }): TaskDefinition {
     const taskDefinition: TaskDefinition = new FargateTaskDefinition(
       this,
       "TaskDefinition",
@@ -315,13 +341,15 @@ export class MainStack extends Stack {
       }),
       secrets: {
         SPRING_DATASOURCE_USERNAME: EcsSecret.fromSecretsManager(
-          this.postgresSecretTemplate,
+          postgresSecretTemplate,
           "username"
         ),
         SPRING_DATASOURCE_PASSWORD: EcsSecret.fromSecretsManager(
-          this.postgresSecretTemplate,
+          postgresSecretTemplate,
           "password"
         ),
+        HUJI_SECURITY_JWT_SIGNING_KEY:
+          EcsSecret.fromSecretsManager(jwtSigningKeySecret),
       },
       environment: {
         SPRING_DATASOURCE_URL: `jdbc:postgresql://${this.databaseInstance.instanceEndpoint.socketAddress}/${DATABASE_NAME}`,

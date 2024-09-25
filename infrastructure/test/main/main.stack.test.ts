@@ -258,6 +258,12 @@ describe("MainStack", () => {
                     ],
                   },
                 },
+                {
+                  "Name": "HUJI_SECURITY_JWT_SIGNING_KEY",
+                  "ValueFrom": {
+                   "Ref": "JwtSigningKeySecret3ECB8B41"
+                  }
+                 }
               ],
             },
           ],
