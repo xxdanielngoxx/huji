@@ -11,7 +11,7 @@ function api_spotless_check() {
     echo '[API]: Good format'
   else
     ./gradlew spotlessApply
-    echo '[API]: Bad format, spotless applied. Check the changed files again'
+    echo "[API]: Bad format, './gradlew spotlessApply' applied. Check the changed files again"
     exit 1
   fi
 
@@ -23,29 +23,31 @@ function pre_commit_api_check() {
   api_spotless_check
 }
 
+function web_lint_check() {
+  cd web
+
+  if npm run lint; then
+    echo '[Web]: Good format'
+  else
+    npm run lint -- --fix
+    echo "[Web]: Bad format, 'npm run lint -- --fix' applied. Check the changed files again"
+    exit 1
+  fi
+
+  cd ..
+}
+
 # pre-commit web check
 function pre_commit_web_check() {
   web_lint_check
 }
 
-function web_lint_check() {
-  cd web
-  ng lint
-  npx prettier . --check
-  cd ..
-}
-
-is_web_changed=false
-
 for f in $(git diff --name-only HEAD); do
   if [[ $f =~ ^api\/* ]]; then
     pre_commit_api_check
   fi
+
   if [[ $f =~ ^web\/* ]]; then
-    is_web_changed=true
+    pre_commit_web_check
   fi
 done
-
-if [ $is_web_changed = true ]; then
-  pre_commit_web_check
-fi
