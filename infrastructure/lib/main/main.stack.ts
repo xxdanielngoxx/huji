@@ -126,6 +126,7 @@ export class MainStack extends Stack {
       albHttpListener: this.albHttpListener,
       serviceIngressSecurityGroup: this.serviceIngressSecurityGroup,
       imageTag: props.imageTag,
+      postgresSecretTemplate: this.postgresSecretTemplate,
     });
 
     this.createTags(props);
@@ -228,14 +229,19 @@ export class MainStack extends Stack {
     albHttpListener,
     serviceIngressSecurityGroup,
     imageTag,
+    postgresSecretTemplate,
   }: {
     vpc: IVpc;
     cluster: ICluster;
     albHttpListener: ApplicationListener;
     serviceIngressSecurityGroup: ISecurityGroup;
     imageTag: string;
+    postgresSecretTemplate: Secret;
   }): IService {
-    const taskDefinition: TaskDefinition = this.createTaskDefinition(imageTag);
+    const taskDefinition: TaskDefinition = this.createTaskDefinition({
+      imageTag,
+      postgresSecretTemplate,
+    });
 
     const service = new FargateService(this, "Service", {
       cluster: cluster,
@@ -289,7 +295,13 @@ export class MainStack extends Stack {
     return EcsServiceIngressSecurityGroup;
   }
 
-  private createTaskDefinition(imageTag: string): TaskDefinition {
+  private createTaskDefinition({
+    imageTag,
+    postgresSecretTemplate,
+  }: {
+    imageTag: string;
+    postgresSecretTemplate: Secret;
+  }): TaskDefinition {
     const taskDefinition: TaskDefinition = new FargateTaskDefinition(
       this,
       "TaskDefinition",
@@ -315,11 +327,11 @@ export class MainStack extends Stack {
       }),
       secrets: {
         SPRING_DATASOURCE_USERNAME: EcsSecret.fromSecretsManager(
-          this.postgresSecretTemplate,
+          postgresSecretTemplate,
           "username"
         ),
         SPRING_DATASOURCE_PASSWORD: EcsSecret.fromSecretsManager(
-          this.postgresSecretTemplate,
+          postgresSecretTemplate,
           "password"
         ),
       },
