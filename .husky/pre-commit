@@ -2,7 +2,9 @@
 #
 # pre-commit hook
 
-set -e
+set -ex
+
+changes=$(git diff --cached --name-only HEAD)
 
 function api_spotless_check() {
   cd api
@@ -42,12 +44,10 @@ function pre_commit_web_check() {
   web_lint_check
 }
 
-for f in $(git diff --name-only HEAD); do
-  if [[ $f =~ ^api\/* ]]; then
-    pre_commit_api_check
-  fi
+if echo $changes | grep --quiet "api/*"; then
+  pre_commit_api_check
+fi
 
-  if [[ $f =~ ^web\/* ]]; then
-    pre_commit_web_check
-  fi
-done
+if echo $changes | grep --quiet "web/*"; then
+  pre_commit_web_check
+fi
