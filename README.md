@@ -1,7 +1,7 @@
-# HUJI Management System
-The HUJI management system is a web-based application that aims to help users manage these HUI games.
+# Huji
+The Huji is a web-based application that aims to help users manage these "hụi" games.
 
-For more information the HUI game: [WIKI HUI](https://vi.wikipedia.org/wiki/Ch%C6%A1i_h%E1%BB%A5i)
+For more information the "hụi" game: [WIKI HUI](https://vi.wikipedia.org/wiki/Ch%C6%A1i_h%E1%BB%A5i)
 
 ## How do I run the whole application?
 ### Build and sync the web application
