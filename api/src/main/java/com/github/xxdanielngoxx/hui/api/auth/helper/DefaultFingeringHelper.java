@@ -7,9 +7,7 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
-@Component
 public class DefaultFingeringHelper implements FingeringHelper {
 
   public static final String DIGEST_ALGORITHM = "SHA-256";

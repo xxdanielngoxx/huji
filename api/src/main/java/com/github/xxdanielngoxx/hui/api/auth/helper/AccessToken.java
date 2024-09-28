@@ -1,4 +1,4 @@
-package com.github.xxdanielngoxx.hui.api.auth.service;
+package com.github.xxdanielngoxx.hui.api.auth.helper;
 
 import jakarta.annotation.Nonnull;
 import lombok.Builder;

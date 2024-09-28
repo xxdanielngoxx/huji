@@ -1,5 +1,6 @@
 package com.github.xxdanielngoxx.hui.api.auth.helper;
 
+import com.github.xxdanielngoxx.hui.api.auth.model.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -10,10 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.util.*;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-@Component
 public class DefaultAccessTokenHelper implements AccessTokenHelper {
 
   private final SecretKey signingKey;
@@ -23,8 +21,8 @@ public class DefaultAccessTokenHelper implements AccessTokenHelper {
   private final FingeringHelper fingeringHelper;
 
   public DefaultAccessTokenHelper(
-      @Value("${huji.security.jwt.signing-key}") final String signingKey,
-      @Value("${huji.security.jwt.expiration-in-seconds}") final Long expirationInSeconds,
+      final String signingKey,
+      final Long expirationInSeconds,
       final FingeringHelper fingeringHelper) {
     this.signingKey = Keys.hmacShaKeyFor(signingKey.getBytes(StandardCharsets.UTF_8));
     this.expirationInSeconds =
@@ -40,7 +38,7 @@ public class DefaultAccessTokenHelper implements AccessTokenHelper {
 
     final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("UTC")));
     final Date now = calendar.getTime();
-    final Date expiration = new Date(now.getTime() + expirationInSeconds);
+    final Date expiration = new Date(now.getTime() + expirationInSeconds * 1000);
 
     final String hashedFingering = fingeringHelper.hash(fingering);
 
@@ -57,7 +55,8 @@ public class DefaultAccessTokenHelper implements AccessTokenHelper {
   }
 
   @Override
-  public Jws<Claims> verify(@Nonnull final String token, @Nonnull final String fingering) {
+  public AccessTokenAuthenticatedPrincipal verify(
+      @Nonnull final String token, @Nonnull final String fingering) {
     final Jws<Claims> claims =
         Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token);
 
@@ -67,6 +66,11 @@ public class DefaultAccessTokenHelper implements AccessTokenHelper {
       throw new MalformedJwtException("invalid access token");
     }
 
-    return claims;
+    return new AccessTokenAuthenticatedPrincipal(
+        claims.getPayload().getSubject(), extractRole(claims.getPayload()));
+  }
+
+  private Role extractRole(@Nonnull Claims claims) {
+    return Role.valueOf(claims.get(ROLE_CLAIM_NAME, String.class));
   }
 }
