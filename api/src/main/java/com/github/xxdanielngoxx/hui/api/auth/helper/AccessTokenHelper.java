@@ -1,7 +1,5 @@
 package com.github.xxdanielngoxx.hui.api.auth.helper;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import jakarta.annotation.Nonnull;
 
 public interface AccessTokenHelper {
@@ -16,5 +14,5 @@ public interface AccessTokenHelper {
   String issue(
       @Nonnull CredentialsValidationResult credentialsValidationResult, @Nonnull String fingering);
 
-  Jws<Claims> verify(@Nonnull String token, @Nonnull String fingering);
+  AccessTokenAuthenticatedPrincipal verify(@Nonnull String token, @Nonnull String fingering);
 }

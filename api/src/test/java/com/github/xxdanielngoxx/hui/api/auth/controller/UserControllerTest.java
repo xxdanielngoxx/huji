@@ -1,9 +1,10 @@
 package com.github.xxdanielngoxx.hui.api.auth.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -11,8 +12,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.xxdanielngoxx.hui.api.auth.controller.request.CheckOwnerEmailDuplicatedRequest;
 import com.github.xxdanielngoxx.hui.api.auth.controller.request.CheckOwnerPhoneNumberDuplicatedRequest;
+import com.github.xxdanielngoxx.hui.api.auth.helper.AccessTokenAuthenticatedPrincipal;
+import com.github.xxdanielngoxx.hui.api.auth.helper.AccessTokenAuthenticatedToken;
+import com.github.xxdanielngoxx.hui.api.auth.model.Role;
+import com.github.xxdanielngoxx.hui.api.auth.model.UserEntity;
 import com.github.xxdanielngoxx.hui.api.auth.service.CheckEmailDuplicatedService;
 import com.github.xxdanielngoxx.hui.api.auth.service.CheckPhoneNumberDuplicatedService;
+import com.github.xxdanielngoxx.hui.api.auth.service.GetUserByUsernameService;
 import com.github.xxdanielngoxx.hui.api.shared.config.SecurityConfig;
 import com.github.xxdanielngoxx.hui.api.shared.error.RestErrorHandler;
 import org.junit.jupiter.api.Nested;
@@ -31,6 +37,8 @@ class UserControllerTest {
   @MockBean private CheckPhoneNumberDuplicatedService checkPhoneNumberDuplicatedService;
 
   @MockBean private CheckEmailDuplicatedService checkEmailDuplicatedService;
+
+  @MockBean private GetUserByUsernameService getUserByUsernameService;
 
   @Autowired private MockMvc mockMvc;
 
@@ -130,6 +138,39 @@ class UserControllerTest {
       then(checkEmailDuplicatedService)
           .should(times(1))
           .checkEmailDuplicated(request.getUsername());
+    }
+  }
+
+  @Nested
+  class GetCurrentUserTest {
+    @Test
+    void should_return_user_resource_when_access_token_is_valid() throws Exception {
+      final String username = "danielngo1998@gmail.com";
+      final String phoneNumber = "0393238017";
+      final Role role = Role.OWNER;
+
+      final UserEntity mockUserEntity =
+          UserEntity.builder().username(username).phoneNumber(phoneNumber).role(role).build();
+      given(getUserByUsernameService.getUserByUsername(username)).willReturn(mockUserEntity);
+
+      final AccessTokenAuthenticatedToken mockAuthenticatedToken =
+          new AccessTokenAuthenticatedToken(
+              new AccessTokenAuthenticatedPrincipal(username, role), new Object());
+
+      mockMvc
+          .perform(get("/api/v1/users/me").with(authentication(mockAuthenticatedToken)))
+          .andExpect(status().isOk())
+          .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+          .andExpect(jsonPath("$.username").value(username))
+          .andExpect(jsonPath("$.phoneNumber").value(phoneNumber))
+          .andExpect(jsonPath("$.role").value(role.name()));
+
+      then(getUserByUsernameService).should(times(1)).getUserByUsername(username);
+    }
+
+    @Test
+    void should_return_status_forbidden_when_user_is_anonymous() throws Exception {
+      mockMvc.perform(get("/api/v1/users/me").with(anonymous())).andExpect(status().isForbidden());
     }
   }
 }

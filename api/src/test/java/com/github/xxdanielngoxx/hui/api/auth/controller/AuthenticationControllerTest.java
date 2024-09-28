@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.xxdanielngoxx.hui.api.auth.controller.request.LoginWithUsernamePasswordRequest;
-import com.github.xxdanielngoxx.hui.api.auth.service.AccessToken;
+import com.github.xxdanielngoxx.hui.api.auth.helper.AccessToken;
 import com.github.xxdanielngoxx.hui.api.auth.service.LoginWithUsernamePasswordService;
 import com.github.xxdanielngoxx.hui.api.shared.config.SecurityConfig;
 import com.github.xxdanielngoxx.hui.api.shared.error.RestErrorHandler;
@@ -67,6 +67,7 @@ class AuthenticationControllerTest {
           .andExpect(cookie().value(FINGERING_COOKIE_NAME, mockAccessToken.fingering()))
           .andExpect(
               cookie().sameSite(FINGERING_COOKIE_NAME, Cookie.SameSite.STRICT.attributeValue()))
+          .andExpect(cookie().path(FINGERING_COOKIE_NAME, "/api/v1"))
           .andExpect(cookie().httpOnly(FINGERING_COOKIE_NAME, true))
           .andExpect(cookie().secure(FINGERING_COOKIE_NAME, true));
 

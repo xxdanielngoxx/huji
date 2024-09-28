@@ -181,6 +181,32 @@ class UserRepositoryTest {
   }
 
   @Nested
+  class FindByUsernameTest {
+
+    @Test
+    void should_return_a_user_when_username_is_matched() {
+      final UserEntity user =
+          UserEntity.builder()
+              .username("danielngo1998@gmail.com")
+              .phoneNumber("0393238017")
+              .role(Role.OWNER)
+              .build();
+
+      userRepository.save(user);
+
+      final UserEntity foundUserByUsername =
+          userRepository.findByUsername(user.getUsername()).orElseThrow();
+      assertThat(foundUserByUsername.getUsername()).isEqualTo(user.getUsername());
+    }
+
+    @Test
+    void should_return_empty_when_username_is_not_matched() {
+      final String username = "danielngo1998@gmail.com";
+      assertThat(userRepository.findByUsername(username)).isEqualTo(Optional.empty());
+    }
+  }
+
+  @Nested
   class FindByUsernameOrPhoneNumberTest {
 
     @Test

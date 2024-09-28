@@ -4,7 +4,7 @@ import static com.github.xxdanielngoxx.hui.api.auth.constant.CookieConstant.FING
 
 import com.github.xxdanielngoxx.hui.api.auth.controller.request.LoginWithUsernamePasswordRequest;
 import com.github.xxdanielngoxx.hui.api.auth.controller.response.AccessTokenResponse;
-import com.github.xxdanielngoxx.hui.api.auth.service.AccessToken;
+import com.github.xxdanielngoxx.hui.api.auth.helper.AccessToken;
 import com.github.xxdanielngoxx.hui.api.auth.service.LoginWithUsernamePasswordService;
 import com.github.xxdanielngoxx.hui.api.shared.error.ApiError;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,6 +65,7 @@ public class AuthenticationController {
         ResponseCookie.from(FINGERING_COOKIE_NAME)
             .value(accessToken.fingering())
             .sameSite(Cookie.SameSite.STRICT.attributeValue())
+            .path("/api/v1")
             .httpOnly(true)
             .secure(true)
             .build();

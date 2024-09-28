@@ -10,8 +10,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import com.github.xxdanielngoxx.hui.api.auth.model.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.MalformedJwtException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -89,16 +87,14 @@ class DefaultAccessTokenHelperTest {
       final String issuedToken =
           defaultAccessTokenHelper.issue(credentialsValidationResult, fingering);
 
-      final Jws<Claims> claims = defaultAccessTokenHelper.verify(issuedToken, fingering);
+      final AccessTokenAuthenticatedPrincipal principal =
+          defaultAccessTokenHelper.verify(issuedToken, fingering);
 
-      final String subject = claims.getPayload().getSubject();
+      final String subject = principal.subject();
       assertThat(subject).isEqualTo(credentialsValidationResult.principal());
 
-      final String role = claims.getPayload().get("role", String.class);
-      assertThat(role).isEqualTo(credentialsValidationResult.role().name());
-
-      final String issuer = claims.getPayload().getIssuer();
-      assertThat(issuer).isEqualTo(ISSUER);
+      final Role role = principal.role();
+      assertThat(role).isEqualTo(credentialsValidationResult.role());
 
       then(fingeringHelper).should(times(1)).matches(eq(fingering), any());
     }

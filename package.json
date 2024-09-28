@@ -14,8 +14,5 @@
   "bugs": {
     "url": "https://github.com/xxdanielngoxx/hui/issues"
   },
-  "homepage": "https://github.com/xxdanielngoxx/hui#readme",
-  "dependencies": {
-    "hui-management-system": "file:"
-  }
+  "homepage": "https://github.com/xxdanielngoxx/hui#readme"
 }
