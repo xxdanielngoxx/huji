@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { SignupFormComponent } from './signup-form/signup-form.component';
-import { RouterLink } from '@angular/router';
+import { AuthFormWrapperComponent } from '../shared/component/auth-form-wrapper/auth-form-wrapper.component';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [SignupFormComponent, RouterLink],
+  imports: [SignupFormComponent, AuthFormWrapperComponent],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss',
 })
