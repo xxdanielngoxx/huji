@@ -9,6 +9,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class UserResource {
+  private String id;
   private String username;
   private String phoneNumber;
   private Role role;

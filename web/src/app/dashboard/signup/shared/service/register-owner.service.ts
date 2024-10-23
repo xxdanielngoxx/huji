@@ -7,7 +7,7 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class RegisterOwnerService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   registerOwner(request: RegisterOwnerRequest): Observable<string> {
     return this.httpClient

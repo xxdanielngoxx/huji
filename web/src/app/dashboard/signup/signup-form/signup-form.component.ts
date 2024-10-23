@@ -44,17 +44,17 @@ import { DuplicatedEmailValidator } from '../shared/validator/duplicated-email-v
   styleUrl: './signup-form.component.scss',
 })
 export class SignupFormComponent implements OnDestroy {
-  private registerOwnerService = inject(RegisterOwnerService);
-  private duplicatedPhoneNumberValidator = inject(
+  private readonly registerOwnerService = inject(RegisterOwnerService);
+  private readonly duplicatedPhoneNumberValidator = inject(
     DuplicatedPhoneNumberValidator
   );
-  private duplicatedEmailValidator = inject(DuplicatedEmailValidator);
-  private router = inject(Router);
-  private matDialog = inject(MatDialog);
+  private readonly duplicatedEmailValidator = inject(DuplicatedEmailValidator);
+  private readonly router = inject(Router);
+  private readonly matDialog = inject(MatDialog);
 
-  private timeoutRefs: ReturnType<typeof setTimeout>[] = [];
+  private readonly timeoutRefs: ReturnType<typeof setTimeout>[] = [];
 
-  private destroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   fullName = new FormControl('', Validators.required);
 

@@ -21,6 +21,7 @@ import com.github.xxdanielngoxx.hui.api.auth.service.CheckPhoneNumberDuplicatedS
 import com.github.xxdanielngoxx.hui.api.auth.service.GetUserByUsernameService;
 import com.github.xxdanielngoxx.hui.api.shared.config.SecurityConfig;
 import com.github.xxdanielngoxx.hui.api.shared.error.RestErrorHandler;
+import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,12 +146,18 @@ class UserControllerTest {
   class GetCurrentUserTest {
     @Test
     void should_return_user_resource_when_access_token_is_valid() throws Exception {
+      final UUID userId = UUID.randomUUID();
       final String username = "danielngo1998@gmail.com";
       final String phoneNumber = "0393238017";
       final Role role = Role.OWNER;
 
       final UserEntity mockUserEntity =
-          UserEntity.builder().username(username).phoneNumber(phoneNumber).role(role).build();
+          UserEntity.builder()
+              .id(userId)
+              .username(username)
+              .phoneNumber(phoneNumber)
+              .role(role)
+              .build();
       given(getUserByUsernameService.getUserByUsername(username)).willReturn(mockUserEntity);
 
       final AccessTokenAuthenticatedToken mockAuthenticatedToken =
@@ -161,6 +168,7 @@ class UserControllerTest {
           .perform(get("/api/v1/users/me").with(authentication(mockAuthenticatedToken)))
           .andExpect(status().isOk())
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+          .andExpect(jsonPath("$.id").value(userId.toString()))
           .andExpect(jsonPath("$.username").value(username))
           .andExpect(jsonPath("$.phoneNumber").value(phoneNumber))
           .andExpect(jsonPath("$.role").value(role.name()));
