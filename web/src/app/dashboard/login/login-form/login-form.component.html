@@ -1,0 +1,37 @@
+<div class="login-form-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="login-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Tên đăng nhập hoặc số điện thoại</mat-label>
+        <input matInput [formControl]="username" />
+        @if (username.hasError('required')) {
+          <mat-error>Tên đăng nhập không được để trống</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Mật khẩu</mat-label>
+        <input
+          matInput
+          [formControl]="password"
+          [type]="showPassword() ? 'text' : 'password'" />
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="onShowPasswordClick($event)"
+          [attr.aria-label]="'Show password'"
+          [attr.aria-pressed]="showPassword()">
+          <mat-icon>{{
+            showPassword() ? 'visibility' : 'visibility_off'
+          }}</mat-icon>
+        </button>
+        @if (password.hasError('required')) {
+          <mat-error>Mật khẩu không được để trống</mat-error>
+        }
+      </mat-form-field>
+      <div class="login-form__action">
+        <button type="submit" mat-flat-button>Tiếp theo</button>
+      </div>
+    </div>
+  </form>
+</div>
