@@ -1,0 +1,70 @@
+:host {
+  display: block;
+
+  background-color: var(--app-primary-90);
+
+  @media screen and (max-width: 960px) {
+    background-color: var(--app-primary-100);
+  }
+}
+
+.auth-form-wrapper {
+  min-height: 100dvh;
+
+  padding: 64px 128px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media screen and (max-width: 960px) {
+    padding: 0;
+  }
+
+  &__form-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    padding: 64px 128px;
+
+    background-color: var(--app-primary-100);
+
+    border: 1px solid var(--app-border);
+    border-radius: var(--app-rounded);
+    box-shadow: var(--app-shadow);
+
+    @media screen and (max-width: 960px) {
+      grid-template-columns: 1fr;
+      gap: 32px 0;
+
+      padding: 24px 32px;
+
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+
+  &__brand {
+    grid-column: span 2;
+
+    color: var(--app-primary-40);
+
+    a {
+      text-decoration: none;
+    }
+
+    @media screen and (max-width: 960px) {
+      grid-column: span 1;
+    }
+  }
+
+  &__cta {
+    grid-column: span 2;
+    justify-self: end;
+
+    @media screen and (max-width: 960px) {
+      grid-column: span 1;
+    }
+  }
+}
